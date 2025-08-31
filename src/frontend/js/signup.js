@@ -1,4 +1,4 @@
-// signup.js - JavaScript for Digital Sangoma++ Signup Page
+// signup.js - JavaScript for Imbewu Signup Page
 
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile navigation toggle
@@ -110,6 +110,34 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Special validation for checkboxes in step 4
+        if (stepIndex === 3) {
+            const termsAgree = document.getElementById('termsAgree');
+            const ethicsAgree = document.getElementById('ethicsAgree');
+            const safetyAgree = document.getElementById('safetyAgree');
+            
+            if (!termsAgree.checked) {
+                showError(termsAgree, 'You must agree to the Terms of Service and Privacy Policy');
+                isValid = false;
+            } else {
+                clearError(termsAgree);
+            }
+            
+            if (!ethicsAgree.checked) {
+                showError(ethicsAgree, 'You must agree to respect cultural protocols');
+                isValid = false;
+            } else {
+                clearError(ethicsAgree);
+            }
+            
+            if (safetyAgree && !safetyAgree.checked) {
+                showError(safetyAgree, 'You must acknowledge this platform provides educational information only');
+                isValid = false;
+            } else if (safetyAgree) {
+                clearError(safetyAgree);
+            }
+        }
+        
         return isValid;
     }
     
@@ -136,10 +164,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Phone validation
+        if (field.id === 'phone' && field.value) {
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            if (!phoneRegex.test(field.value.replace(/[\s\-\(\)]/g, ''))) {
+                errorMessage = 'Please enter a valid phone number';
+                isValid = false;
+            }
+        }
+        
         // Password validation
         if (field.id === 'password' && field.value) {
             if (!validatePasswordStrength(field.value)) {
                 errorMessage = 'Password does not meet requirements';
+                isValid = false;
+            }
+        }
+        
+        // Cultural affiliation validation
+        if (field.id === 'cultural_affiliation' && field.value) {
+            if (field.value === '') {
+                errorMessage = 'Please select your cultural background';
                 isValid = false;
             }
         }
@@ -184,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const errorElement = document.getElementById(field.id + '_error');
         if (errorElement) {
             errorElement.textContent = message;
+            errorElement.classList.add('visible');
         }
     }
     
@@ -194,91 +240,101 @@ document.addEventListener('DOMContentLoaded', function() {
         const errorElement = document.getElementById(field.id + '_error');
         if (errorElement) {
             errorElement.textContent = '';
+            errorElement.classList.remove('visible');
         }
     }
     
-    // Handle form submission
-    function handleFormSubmission(e) {
-        e.preventDefault();
-        
-        // Validate all steps
-        let allValid = true;
-        for (let i = 0; i < steps.length; i++) {
-            if (!validateStep(i)) {
-                allValid = false;
-                showStep(i); // Show the first step with errors
-                break;
-            }
+// Handle form submission
+function handleFormSubmission(e) {
+    e.preventDefault();
+    
+    // Validate all steps
+    let allValid = true;
+    for (let i = 0; i < steps.length; i++) {
+        if (!validateStep(i)) {
+            allValid = false;
+            showStep(i); // Show the first step with errors
+            break;
         }
-        
-        if (!allValid) {
-            showFormStatus('Please correct the errors above.', 'error');
-            return;
-        }
-        
-        // Prepare form data
-        const formData = {
-            role: document.querySelector('input[name="role"]:checked').value,
-            full_name: document.getElementById('full_name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            cultural_affiliation: document.getElementById('cultural_affiliation').value,
-            password: document.getElementById('password').value,
-            terms_agreed: document.getElementById('termsAgree').checked,
-            ethics_agreed: document.getElementById('ethicsAgree').checked,
-            newsletter_agreed: document.getElementById('newsletterAgree').checked
-        };
-        
-        // Show loading state
-        const submitButton = document.querySelector('.submit-btn');
-        submitButton.disabled = true;
-        submitButton.classList.add('loading');
-        
-        // Submit form data to server
-        fetch('/api/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message && data.user) {
-                showFormStatus(data.message, 'success');
-                
-                // Store user data using auth.js if available
-                if (typeof auth !== 'undefined' && auth.handleLogin) {
-                    auth.handleLogin(data.user);
-                }
-                
-                // Redirect after successful signup
-                setTimeout(() => {
-                    window.location.href = getDashboardUrl(data.user.role);
-                }, 2000);
-            } else if (data.errors) {
-                // Show validation errors
-                Object.keys(data.errors).forEach(fieldName => {
-                    const field = document.getElementById(fieldName);
-                    if (field) {
-                        showError(field, data.errors[fieldName]);
-                    }
-                });
-                
-                showFormStatus(data.message || 'Please correct the errors above.', 'error');
-            } else {
-                showFormStatus(data.message || 'An error occurred during signup.', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Signup error:', error);
-            showFormStatus('An error occurred. Please try again later.', 'error');
-        })
-        .finally(() => {
-            submitButton.disabled = false;
-            submitButton.classList.remove('loading');
-        });
     }
+    
+    if (!allValid) {
+        showFormStatus('Please correct the errors above.', 'error');
+        return;
+    }
+    
+    // Prepare form data with correct field names for server
+    const formData = {
+        role: document.querySelector('input[name="role"]:checked').value,
+        full_name: document.getElementById('full_name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        confirmPassword: document.getElementById('confirmPassword').value,
+        phone: document.getElementById('phone').value || '',
+        cultural_affiliation: document.getElementById('cultural_affiliation').value,
+        terms_agreed: document.getElementById('termsAgree').checked,
+        ethics_agreed: document.getElementById('ethicsAgree').checked,
+        safety_agreed: document.getElementById('safetyAgree') ? document.getElementById('safetyAgree').checked : true,
+        newsletter_agreed: document.getElementById('newsletterAgree').checked
+    };
+    
+    // Show loading state
+    const submitButton = document.querySelector('.submit-btn');
+    submitButton.disabled = true;
+    submitButton.classList.add('loading');
+    
+    // Submit form data to server
+    fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Server error occurred');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.message && data.user) {
+            showFormStatus(data.message, 'success');
+            
+            // Store user data using auth.js if available
+            if (typeof auth !== 'undefined' && auth.handleLogin) {
+                auth.handleLogin(data.user);
+            }
+            
+            // Redirect after successful signup
+            setTimeout(() => {
+                window.location.href = getDashboardUrl(data.user.role);
+            }, 2000);
+        } else {
+            showFormStatus(data.message || 'An unexpected error occurred.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Signup error:', error);
+        
+        // Handle specific error cases
+        if (error.message.includes('email') || error.message.includes('Email')) {
+            showError(document.getElementById('email'), error.message);
+            showStep(1); // Go back to personal info step
+        } else if (error.message.includes('password')) {
+            showError(document.getElementById('password'), error.message);
+            showStep(2); // Go back to security step
+        } else {
+            showFormStatus(error.message || 'An error occurred. Please try again later.', 'error');
+        }
+    })
+    .finally(() => {
+        submitButton.disabled = false;
+        submitButton.classList.remove('loading');
+    });
+}
     
     // Show form status message
     function showFormStatus(message, type) {
@@ -294,12 +350,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function getDashboardUrl(role) {
         switch(role) {
             case 'moderator':
-                return '/moderator-dashboard.html';
+                return '/login.html';
             case 'contributor':
-                return '/contributor-dashboard.html';
-            case 'seeker':
+                return '/login.html';
+            case 'learner':
             default:
-                return '/seeker-dashboard.html';
+                return '/login.html';
         }
     }
     
@@ -308,6 +364,37 @@ document.addEventListener('DOMContentLoaded', function() {
     validationFields.forEach(field => {
         field.addEventListener('blur', function() {
             validateField(this);
+        });
+        
+        field.addEventListener('input', function() {
+            // Clear error when user starts typing
+            if (this.classList.contains('error')) {
+                clearError(this);
+            }
+        });
+    });
+    
+    // Checkbox validation
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][required]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                clearError(this);
+            } else {
+                let errorMessage = '';
+                switch(this.id) {
+                    case 'termsAgree':
+                        errorMessage = 'You must agree to the Terms of Service and Privacy Policy';
+                        break;
+                    case 'ethicsAgree':
+                        errorMessage = 'You must agree to respect cultural protocols';
+                        break;
+                    case 'safetyAgree':
+                        errorMessage = 'You must acknowledge this platform provides educational information only';
+                        break;
+                }
+                showError(this, errorMessage);
+            }
         });
     });
 });
