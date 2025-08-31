@@ -146,3 +146,181 @@ Imbewu transforms traditional medicine from dangerous guesswork into safe, prese
 ---
 
 *"When a grandmother in Limpopo shares her healing knowledge through Imbewu, it saves a child in Cape Town. When a young person documents a plant remedy, it preserves wisdom for unborn generations. We heal together, we preserve together, we grow together."*
+
+
+
+# Dashboard Design for Imbewu User Roles
+
+Based on your comprehensive Imbewu platform description, here's a detailed breakdown of dashboard tabs and functionality for each user role:
+
+## 🌿 Seeker Dashboard (Knowledge Learner)
+
+### Navigation Tabs:
+1. **Home/Overview**
+   - Personalized welcome with cultural greeting
+   - Daily ancestral wisdom/proverb
+   - Upcoming cultural events/rituals
+   - Quick access to recently viewed plants/rituals
+
+2. **Plant Identification**
+   - Camera interface for plant scanning
+   - Upload image option
+   - Recent identifications history
+   - Favorite plants collection
+
+3. **Knowledge Library**
+   - Searchable database of plants, rituals, traditions
+   - Filter by cultural affiliation, plant type, medicinal use
+   - Saved items and personal collections
+   - Downloadable content for offline use
+
+4. **Ritual Calendar**
+   - Personalized cultural calendar view
+   - Notifications for upcoming significant dates
+   - Moon phases and seasonal changes
+   - Option to add personal reminders
+
+5. **Connect with Elders**
+   - Browse available knowledge keepers
+   - Request consultation/guidance
+   - Message interface
+   - Scheduled session management
+
+6. **Learning Paths**
+   - Curated learning journeys based on interests
+   - Progress tracking
+   - Recommended next steps
+   - Cultural competency milestones
+
+7. **Profile & Settings**
+   - Personal information
+   - Cultural background preferences
+   - Notification settings
+   - Language preferences
+
+## 📚 Contributor Dashboard (Knowledge Sharer)
+
+### Navigation Tabs:
+1. **Dashboard Overview**
+   - Contribution metrics (views, appreciations)
+   - Recent community engagement
+   - Notifications on content verification
+
+2. **My Contributions**
+   - Manage published content
+   - Drafts in progress
+   - Submission history
+   - Performance analytics
+
+3. **Add New Knowledge**
+   - Plant knowledge submission form
+   - Ritual/tradition documentation
+   - Multimedia upload (images, audio, video)
+   - Cultural context fields
+
+4. **Content Verification Queue**
+   - Review community submissions in their cultural domain
+   - Approve/reject with feedback
+   - Flag for moderator attention when needed
+
+5. **Elder Connections**
+   - Manage consultation requests
+   - Schedule availability
+   - Session history and feedback
+   - Knowledge transfer session tools
+
+6. **Community Engagement**
+   - Answer questions from seekers
+   - Participate in discussion forums
+   - Cultural mentorship programs
+   - Community challenges/initiatives
+
+7. **Profile & Verification**
+   - Cultural credentials management
+   - Expertise domains specification
+   - Verification status
+   - Contribution preferences
+
+## 🛡️ Moderator Dashboard (Cultural Guardian)
+
+### Navigation Tabs:
+1. **Moderation Overview**
+   - System health metrics
+   - Recent flagged content
+   - Cultural accuracy reports
+   - Priority tasks
+
+2. **Content Moderation**
+   - Review queue for all submissions
+   - Cultural accuracy assessment tools
+   - Cross-cultural consultation system
+   - Content approval/editing/rejection workflow
+
+3. **User Management**
+   - Contributor verification process
+   - Role assignment and permissions
+   - Cultural expertise validation
+   - User reporting system
+
+4. **Knowledge Validation**
+   - Scientific correlation interface
+   - Cross-reference with academic databases
+   - Cultural consensus building tools
+   - Dispute resolution system
+
+5. **Cultural Domains**
+   - Manage cultural taxonomy
+   - Region-specific knowledge protocols
+   - Access permissions by cultural affiliation
+   - Sacred/restricted knowledge management
+
+6. **Analytics & Reporting**
+   - Platform usage statistics
+   - Knowledge gap identification
+   - Cultural representation metrics
+   - System improvement recommendations
+
+7. **Admin Settings**
+   - Platform configuration
+   - Cultural protocol management
+   - Emergency content removal
+   - System-wide notifications
+
+## 🔗 How Tabs Interconnect Across Roles
+
+### Knowledge Flow:
+1. **Seeker identifies plant** → Contributor verifies → Moderator validates cultural accuracy
+2. **Contributor submits knowledge** → Moderator reviews → Becomes available to Seekers
+3. **Seeker requests elder guidance** → Contributor responds → Moderator ensures cultural safety
+
+### Data Integration:
+- Plant identification results populate all dashboards with appropriate permissions
+- Ritual calendar syncs across roles with privacy considerations
+- Knowledge graph updates reflect in all user experiences
+- Cultural protocols enforced consistently across all interfaces
+
+### User Journey Examples:
+1. A Seeker identifies a plant → Saves to their collection → Requests more info from Contributors → Receives culturally-verified information
+
+2. A Contributor documents a ritual → Submits for verification → Moderator checks cultural accuracy → Published to Knowledge Library → Seekers receive notifications
+
+3. A Moderator identifies knowledge gap → Creates community challenge → Contributors submit knowledge → Moderator validates → Becomes available to Seekers
+
+## 🎯 Maximizing Each Tab's Effectiveness
+
+### For Seekers:
+- **Personalization**: AI-driven content recommendations based on cultural background and interests
+- **Gamification**: Learning milestones, cultural competency badges, community challenges
+- **Accessibility**: Multi-language support, offline functionality, voice interfaces
+
+### For Contributors:
+- **Verification Tools**: Cultural reference databases, collaboration features with other contributors
+- **Impact Metrics**: Visualizations of how their contributions help others
+- **Knowledge Protection**: Digital rights management for traditional knowledge
+
+### For Moderators:
+- **Decision Support**: AI-powered cultural accuracy suggestions, conflict detection algorithms
+- **Collaboration Tools**: Inter-moderator consultation system, cultural expert networks
+- **Transparency Features**: Audit trails for all moderation decisions, cultural protocol documentation
+
+This dashboard structure ensures each user role can fully engage with the platform while maintaining cultural safety, accuracy, and the intergenerational knowledge transfer that is central to Imbewu's mission.
