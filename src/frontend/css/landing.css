@@ -79,7 +79,7 @@ h1, h2, h3, h4, h5 {
 
 .logo-icon {
     font-size: 2rem;
-    color: var(--primary);
+    color: var(--success);
 }
 
 .logo-text {
@@ -185,7 +185,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-content {
-    max-width: 1200px;
+    max-width: 1000px;
     z-index: 2;
     position: relative;
     margin: 0 auto;
@@ -195,7 +195,7 @@ h1, h2, h3, h4, h5 {
 .hero h1 {
     font-size: 3.2rem;
     margin-bottom: 1.5rem;
-    color: var(--navy);
+    color: var(--primary);
     line-height: 1.2;
 }
 
@@ -215,6 +215,7 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 2rem;
     justify-content: center;
 }
+
 .floating-elements {
     position: absolute;
     top: 0;
@@ -269,6 +270,58 @@ h1, h2, h3, h4, h5 {
     100% {
         transform: translateY(0) rotate(0deg);
     }
+}
+
+/* Crisis Section */
+.crisis {
+    padding: 6rem 0;
+    background-color: var(--background-alt);
+    position: relative;
+}
+
+.crisis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.crisis-card {
+    background: var(--background);
+    padding: 2.5rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px var(--shadow);
+    transition: all 0.3s ease;
+    text-align: center;
+    border-top: 4px solid var(--error);
+}
+
+.crisis-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.crisis-icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    background: var(--error);
+    color: white;
+    font-size: 1.8rem;
+    border-radius: 50%;
+}
+
+.crisis-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.crisis-card p {
+    color: var(--text-light);
+    line-height: 1.7;
 }
 
 /* Features Section */
@@ -388,31 +441,76 @@ h1, h2, h3, h4, h5 {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    object-fit: cover;
     margin-right: 1rem;
     border: 2px solid rgba(255, 255, 255, 0.2);
-    background: var(--gold);
+    background: var(--secondary);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--white);
+    color: white;
     font-weight: 600;
     font-size: 1.2rem;
 }
 
-
 .author-info h4 {
     margin-bottom: 0.25rem;
+    color: white;
+}
+
+.author-info p {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .rating {
     color: var(--warning);
 }
 
+/* Impact Section */
+.impact {
+    padding: 6rem 0;
+    background-color: var(--background-alt);
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.impact-card {
+    background: var(--background);
+    padding: 2.5rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px var(--shadow);
+}
+
+.impact-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    text-align: center;
+}
+
+.impact-card ul {
+    list-style: none;
+}
+
+.impact-card li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.impact-card i {
+    color: var(--success);
+    margin-top: 0.25rem;
+}
+
 /* Stats Section */
 .stats {
     padding: 6rem 0;
-    background-color: var(--background-alt);
+    background-color: var(--background);
 }
 
 .stats-grid {
@@ -512,6 +610,12 @@ h1, h2, h3, h4, h5 {
     font-weight: 700;
 }
 
+.footer-quote {
+    font-style: italic;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
 .footer-column h3 {
     margin-bottom: 1.5rem;
     font-size: 1.2rem;
@@ -562,12 +666,6 @@ h1, h2, h3, h4, h5 {
         font-size: 2.5rem;
     }
     
-    .hero-image {
-        position: relative;
-        width: 100%;
-        margin-top: 3rem;
-    }
-    
     .nav-links {
         display: none;
     }
@@ -578,7 +676,11 @@ h1, h2, h3, h4, h5 {
     
     .hero-buttons, .cta-buttons {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+    }
+    
+    .impact-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -603,8 +705,13 @@ h1, h2, h3, h4, h5 {
         font-size: 2rem;
     }
     
-    .feature-card, .testimonial-card, .stat-card {
+    .feature-card, .testimonial-card, .stat-card, .crisis-card, .impact-card {
         padding: 2rem 1.5rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
     }
 }
 

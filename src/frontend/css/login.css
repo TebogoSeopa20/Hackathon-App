@@ -136,11 +136,15 @@
 }
 
 .login-btn {
-    width: 100%;
-    padding: 0.85rem;
-    font-size: 1rem;
-    margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  padding: 0.85rem;
+  font-size: 1rem;
+  margin: 0 auto; /* centers the button horizontally */
 }
+
 
 .login-footer {
     margin-top: 2rem;

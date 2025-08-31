@@ -41,7 +41,16 @@ const redirectUrl = process.env.NODE_ENV === 'production'
 // Configure middleware
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
-app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, 'frontend', 'html')));
+
+// Serve CSS files from css directory
+app.use('/css', express.static(path.join(__dirname, 'frontend', 'css')));
+
+// Serve JS files from js directory
+app.use('/js', express.static(path.join(__dirname, 'frontend', 'js')));
+
+// Serve images from images directory
+app.use('/images', express.static(path.join(__dirname, 'frontend', 'images')));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -184,129 +193,30 @@ app.get('/auth/google/callback', async (req, res) => {
   }
 });
 
-// Cultural Signup Endpoint (for Google users)
-app.post('/api/signup-cultural', async (req, res) => {
-  try {
-    if (!req.session.googleProfile) {
-      return res.status(400).json({ message: 'Google profile data not found. Please try logging in with Google again.' });
-    }
-    
-    const googleProfile = req.session.googleProfile;
-    const { 
-      full_name,
-      phone,
-      cultural_affiliation,
-      terms_agreed
-    } = req.body;
-    
-    // Basic validation
-    const errors = {};
-    
-    if (!full_name) errors.full_name = 'Full name is required';
-    if (!phone) errors.phone = 'Phone number is required';
-    if (!cultural_affiliation || cultural_affiliation.length === 0) {
-      errors.cultural_affiliation = 'Cultural affiliation is required';
-    }
-    if (!terms_agreed) errors.terms_agreed = 'You must agree to the terms and ethics statement';
-    
-    if (Object.keys(errors).length > 0) {
-      return res.status(400).json({ message: 'Validation failed', errors });
-    }
-    
-    // Create a random password for auth user
-    const randomPassword = Math.random().toString(36).slice(-10);
-    
-    // Create user metadata
-    const userMetadata = {
-      full_name: full_name || googleProfile.full_name,
-      cultural_affiliation,
-      authProvider: 'google',
-      googleId: googleProfile.googleId
-    };
-    
-    // Create new user in Supabase Auth
-    const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-      email: googleProfile.email,
-      password: randomPassword,
-      email_confirm: true,
-      user_metadata: userMetadata
-    });
-    
-    if (createError) {
-      console.error(`Error creating user: ${createError.message}`);
-      return res.status(400).json({ message: createError.message });
-    }
-    
-    // Create profile in profiles table (default role: seeker)
-    const { error: profileError } = await supabaseAdmin
-      .from('profiles')
-      .insert({
-        id: newUser.user.id,
-        role: 'seeker', // Default role
-        full_name: full_name || googleProfile.full_name,
-        email: googleProfile.email,
-        phone,
-        cultural_affiliation,
-        agreed_to_terms: true,
-        terms_agreed_at: new Date().toISOString(),
-        avatar_url: googleProfile.picture
-      });
-    
-    if (profileError) {
-      console.error(`Error creating profile: ${profileError.message}`);
-      
-      // Clean up auth user if profile creation fails
-      await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
-      
-      return res.status(400).json({ message: profileError.message });
-    }
-    
-    // Store user data in session
-    req.session.user = {
-      id: newUser.user.id,
-      email: newUser.user.email,
-      role: 'seeker',
-      full_name: full_name || googleProfile.full_name,
-      cultural_affiliation
-    };
-    
-    delete req.session.googleProfile;
-    
-    const redirectUrl = getDashboardUrlByRole('seeker');
-    
-    return res.status(201).json({ 
-      message: 'Account created successfully!', 
-      user: {
-        id: newUser.user.id,
-        email: newUser.user.email,
-        role: 'seeker',
-        full_name: full_name || googleProfile.full_name,
-        cultural_affiliation
-      },
-      redirectUrl
-    });
-  } catch (error) {
-    console.error(`Cultural signup error: ${error.message}`);
-    return res.status(500).json({ message: `Server error: ${error.message}` });
-  }
-});
 
-// Regular Email Signup Endpoint
+// server.js - Updated to handle role properly
+
+// Regular Email Signup Endpoint - UPDATED TO HANDLE ROLE
 app.post('/api/signup', async (req, res) => {
   try {
     const { 
+      role, // ADDED: Capture role from request body
       full_name, 
       email, 
       password, 
       confirmPassword, 
       phone,
       cultural_affiliation,
-      terms_agreed
+      terms_agreed,
+      ethics_agreed,
+      safety_agreed,
+      newsletter_agreed
     } = req.body;
     
     // Basic validation
     const errors = {};
     
+    if (!role) errors.role = 'Role is required'; // ADDED: Validate role
     if (!full_name) errors.full_name = 'Full name is required';
     if (!email) errors.email = 'Email is required';
     if (!password) errors.password = 'Password is required';
@@ -316,7 +226,8 @@ app.post('/api/signup', async (req, res) => {
     if (!cultural_affiliation || cultural_affiliation.length === 0) {
       errors.cultural_affiliation = 'Cultural affiliation is required';
     }
-    if (!terms_agreed) errors.terms_agreed = 'You must agree to the terms and ethics statement';
+    if (!terms_agreed) errors.terms_agreed = 'You must agree to the Terms of Service and Privacy Policy';
+    if (!ethics_agreed) errors.ethics_agreed = 'You must agree to respect cultural protocols';
     
     if (Object.keys(errors).length > 0) {
       return res.status(400).json({ message: 'Validation failed', errors });
@@ -341,10 +252,16 @@ app.post('/api/signup', async (req, res) => {
       });
     }
     
-    // Create user metadata
+    // Create user metadata - this will be used by the trigger to create the profile
     const userMetadata = {
-      full_name,
-      cultural_affiliation,
+      role: role, // ADDED: Include role in metadata
+      full_name: full_name,
+      phone: phone,
+      cultural_affiliation: cultural_affiliation,
+      agreed_to_terms: terms_agreed,
+      ethics_agreed: ethics_agreed,
+      safety_agreed: safety_agreed || false,
+      newsletter_agreed: newsletter_agreed || false,
       authProvider: 'email'
     };
     
@@ -353,7 +270,7 @@ app.post('/api/signup', async (req, res) => {
       ? 'https://' + req.get('host')
       : `${req.protocol}://${req.get('host')}`;
     
-    // Create user in auth
+    // Create user in auth - the trigger will automatically create the profile
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -377,32 +294,155 @@ app.post('/api/signup', async (req, res) => {
       return res.status(500).json({ message: 'No user data returned from signup process' });
     }
     
-    // Create profile in profiles table (default role: seeker)
-    const { error: profileError } = await supabaseAdmin
+    // Update the auto-created profile with any additional fields that weren't in metadata
+    // This prevents the duplicate key error since the profile was already created by the trigger
+    const { error: profileUpdateError } = await supabaseAdmin
       .from('profiles')
-      .insert({
-        id: data.user.id,
-        role: 'seeker',
-        full_name,
-        email,
-        phone,
-        cultural_affiliation,
-        agreed_to_terms: true,
+      .update({
+        role: role, // ADDED: Ensure role is set in the profile
+        email: email, // Ensure email is set in the profile
+        phone: phone,
+        cultural_affiliation: cultural_affiliation,
+        agreed_to_terms: terms_agreed,
+        ethics_agreed: ethics_agreed,
+        safety_agreed: safety_agreed || false,
+        newsletter_agreed: newsletter_agreed || false,
         terms_agreed_at: new Date().toISOString()
-      });
+      })
+      .eq('id', data.user.id);
     
-    if (profileError) {
-      console.error(`Error creating profile: ${profileError.message}`);
-      return res.status(400).json({ message: profileError.message });
+    if (profileUpdateError) {
+      console.error(`Error updating profile: ${profileUpdateError.message}`);
+      // Don't fail the signup - the profile was created by trigger, we just couldn't update additional fields
     }
     
     return res.status(201).json({ 
       message: 'Account created successfully. Please check your email to verify your account.', 
-      user: data.user,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        role: role, // CHANGED: Use the actual role from form
+        full_name: full_name,
+        cultural_affiliation: cultural_affiliation
+      },
       emailConfirmationRequired: true
     });
   } catch (error) {
     console.error(`Signup error: ${error.message}`);
+    return res.status(500).json({ message: `Server error: ${error.message}` });
+  }
+});
+
+// Cultural Signup Endpoint (for Google users) - UPDATED TO HANDLE ROLE
+app.post('/api/signup-cultural', async (req, res) => {
+  try {
+    if (!req.session.googleProfile) {
+      return res.status(400).json({ message: 'Google profile data not found. Please try logging in with Google again.' });
+    }
+    
+    const googleProfile = req.session.googleProfile;
+    const { 
+      role, // ADDED: Capture role from request body
+      full_name,
+      phone,
+      cultural_affiliation,
+      terms_agreed,
+      ethics_agreed,
+      safety_agreed,
+      newsletter_agreed
+    } = req.body;
+    
+    // Basic validation
+    const errors = {};
+    
+    if (!role) errors.role = 'Role is required'; // ADDED: Validate role
+    if (!full_name) errors.full_name = 'Full name is required';
+    if (!phone) errors.phone = 'Phone number is required';
+    if (!cultural_affiliation || cultural_affiliation.length === 0) {
+      errors.cultural_affiliation = 'Cultural affiliation is required';
+    }
+    if (!terms_agreed) errors.terms_agreed = 'You must agree to the Terms of Service and Privacy Policy';
+    if (!ethics_agreed) errors.ethics_agreed = 'You must agree to respect cultural protocols';
+    
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ message: 'Validation failed', errors });
+    }
+    
+    // Create user metadata
+    const userMetadata = {
+      role: role, // ADDED: Include role in metadata
+      full_name: full_name || googleProfile.full_name,
+      phone: phone,
+      cultural_affiliation: cultural_affiliation,
+      agreed_to_terms: terms_agreed,
+      ethics_agreed: ethics_agreed,
+      safety_agreed: safety_agreed || false,
+      newsletter_agreed: newsletter_agreed || false,
+      authProvider: 'google',
+      googleId: googleProfile.googleId
+    };
+    
+    // Create new user in Supabase Auth - this will trigger automatic profile creation
+    const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+      email: googleProfile.email,
+      password: Math.random().toString(36).slice(-10), // Random password
+      email_confirm: true,
+      user_metadata: userMetadata
+    });
+    
+    if (createError) {
+      console.error(`Error creating user: ${createError.message}`);
+      return res.status(400).json({ message: createError.message });
+    }
+    
+    // Update the auto-created profile with additional fields
+    const { error: profileUpdateError } = await supabaseAdmin
+      .from('profiles')
+      .update({
+        role: role, // ADDED: Ensure role is set in the profile
+        email: googleProfile.email, // Ensure email is set
+        phone: phone,
+        cultural_affiliation: cultural_affiliation,
+        agreed_to_terms: terms_agreed,
+        ethics_agreed: ethics_agreed,
+        safety_agreed: safety_agreed || false,
+        newsletter_agreed: newsletter_agreed || false,
+        terms_agreed_at: new Date().toISOString(),
+        avatar_url: googleProfile.picture
+      })
+      .eq('id', newUser.user.id);
+    
+    if (profileUpdateError) {
+      console.error(`Error updating profile: ${profileUpdateError.message}`);
+      // Don't fail the signup - the profile was created by trigger, we just couldn't update additional fields
+    }
+    
+    // Store user data in session
+    req.session.user = {
+      id: newUser.user.id,
+      email: newUser.user.email,
+      role: role, // CHANGED: Use the actual role from form
+      full_name: full_name || googleProfile.full_name,
+      cultural_affiliation: cultural_affiliation
+    };
+    
+    delete req.session.googleProfile;
+    
+    const redirectUrl = getDashboardUrlByRole(role); // CHANGED: Use the actual role
+    
+    return res.status(201).json({ 
+      message: 'Account created successfully!', 
+      user: {
+        id: newUser.user.id,
+        email: newUser.user.email,
+        role: role, // CHANGED: Use the actual role from form
+        full_name: full_name || googleProfile.full_name,
+        cultural_affiliation: cultural_affiliation
+      },
+      redirectUrl
+    });
+  } catch (error) {
+    console.error(`Cultural signup error: ${error.message}`);
     return res.status(500).json({ message: `Server error: ${error.message}` });
   }
 });
@@ -504,13 +544,14 @@ app.get('/api/auth/status', async (req, res) => {
         .single();
       
       if (!error && profile) {
+        // Ensure req.session.user exists
         req.session.user.role = profile.role;
         req.session.user.full_name = profile.full_name;
         req.session.user.cultural_affiliation = profile.cultural_affiliation;
         req.session.user.is_verified = profile.is_verified;
       }
-    } catch (error) {
-      console.error('Error refreshing user status:', error);
+    } catch (err) {
+      console.error('Error refreshing user status:', err);
     }
     
     return res.status(200).json({ 
@@ -564,11 +605,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend','html', 'login.html'));
+  res.sendFile(path.join(__dirname, 'frontend', 'login.html'));
 });
 
 app.get('/signup', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend','html', 'signup.html'));
+  res.sendFile(path.join(__dirname, 'frontend', 'signup.html'));
 });
 
 app.get('/signup-cultural', (req, res) => {
