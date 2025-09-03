@@ -7,6 +7,8 @@ const session = require('express-session');
 const { createClient } = require('@supabase/supabase-js');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const plantsApi = require('./backend/plants-api');
+const culturePracticeApi = require('./backend/cultural-practices-api');
 
 // Create the Express application
 const app = express();
@@ -43,6 +45,8 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'frontend', 'html')));
 
+app.use('/api', plantsApi);
+app.use('/api', culturePracticeApi);
 // Serve CSS files from css directory
 app.use('/css', express.static(path.join(__dirname, 'frontend', 'css')));
 
