@@ -43,35 +43,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Navigation handling
-    const navItems = document.querySelectorAll('.nav-item');
-    const dashboardSections = document.querySelectorAll('.dashboard-section');
-    
-    navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Remove active class from all items
-            navItems.forEach(navItem => navItem.classList.remove('active'));
-            
-            // Add active class to clicked item
-            this.classList.add('active');
-            
-            // Get target section ID
-            const targetId = this.getAttribute('href').substring(1);
-            
-            // Hide all sections
-            dashboardSections.forEach(section => section.classList.remove('active'));
-            
-            // Show target section
-            document.getElementById(targetId).classList.add('active');
-            
-            // Close mobile sidebar if open
-            if (sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-            }
-        });
+const navItems = document.querySelectorAll('.nav-item');
+
+navItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+        const targetHref = this.getAttribute('href');
+        
+        // Check if it's an external link (contains .html)
+        if (targetHref.includes('.html')) {
+            // Allow default behavior for external links
+            return;
+        }
+        
+        // For internal section links, prevent default and handle tab switching
+        e.preventDefault();
+        
+        // Remove active class from all items
+        navItems.forEach(navItem => navItem.classList.remove('active'));
+        
+        // Add active class to clicked item
+        this.classList.add('active');
+        
+        // Get target section ID
+        const targetId = targetHref.substring(1);
+        
+        // Hide all sections
+        dashboardSections.forEach(section => section.classList.remove('active'));
+        
+        // Show target section
+        document.getElementById(targetId).classList.add('active');
+        
+        // Close mobile sidebar if open
+        if (sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+        }
     });
-    
+});
     // Logout functionality
     const logoutButton = document.querySelector('.btn-logout');
     if (logoutButton) {

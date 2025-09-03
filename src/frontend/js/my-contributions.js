@@ -85,7 +85,7 @@ async function loadUserContributions() {
         
     } catch (error) {
         console.error('Error loading contributions:', error);
-        showNotification('Error loading your contributions. Please try again.', 'error');
+        
     }
 }
 
