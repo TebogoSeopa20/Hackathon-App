@@ -420,7 +420,9 @@ h1, h2, h3, h4, h5 {
     box-shadow: var(--shadow-xl);
     position: relative;
     overflow: hidden;
+    text-align: center; /* Centers text horizontally */
 }
+
 
 .welcome-banner::before {
     content: '';
@@ -455,8 +457,10 @@ h1, h2, h3, h4, h5 {
 
 .welcome-actions {
     display: flex;
+    justify-content: center; /* centers buttons horizontally */
     gap: 1rem;
 }
+
 
 .btn {
     padding: 0.875rem 1.75rem;

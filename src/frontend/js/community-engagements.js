@@ -402,7 +402,7 @@ function createEngagementCard(engagement) {
         <div class="card-actions">
             <button class="action-btn like-btn ${engagement.user_has_liked ? 'active' : ''}">
                 <i class="fas fa-heart"></i>
-                ${engagement.user_has_liked ? 'Liked' : 'Like'}
+                ${engagement.user_has_liked ? 'Like' : 'Like'}
             </button>
             <button class="action-btn comment-btn">
                 <i class="fas fa-comment"></i>

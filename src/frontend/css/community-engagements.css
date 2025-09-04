@@ -1,138 +1,3 @@
-/* community-engagements.css */
-:root {
-    --primary: 221, 83%, 53%; /* Blue */
-    --primary-foreground: 0, 0%, 100%;
-    
-    --secondary: 142, 76%, 36%; /* Green */
-    --secondary-foreground: 0, 0%, 100%;
-    
-    --background: 0, 0%, 100%;
-    --foreground: 222, 84%, 5%;
-    
-    --card: 0, 0%, 100%;
-    --card-foreground: 222, 84%, 5%;
-    
-    --muted: 210, 40%, 96%;
-    --muted-foreground: 215, 16%, 47%;
-    
-    --accent: 210, 40%, 96%;
-    --accent-foreground: 222, 84%, 5%;
-    
-    --border: 214, 32%, 91%;
-    --input: 214, 32%, 91%;
-    
-    --radius: 0.5rem;
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    
-    --success: 142, 76%, 36%;
-    --error: 0, 84%, 60%;
-    --warning: 38, 92%, 50%;
-    --info: 221, 83%, 53%;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    line-height: 1.6;
-}
-
-/* Navigation Bar */
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background-color: hsl(var(--card));
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: hsl(var(--primary));
-}
-
-.logo-icon {
-    margin-right: 0.5rem;
-    color: hsl(var(--secondary));
-}
-
-.nav-search {
-    display: flex;
-    align-items: center;
-    flex: 0 1 400px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius) 0 0 var(--radius);
-    outline: none;
-}
-
-.search-btn {
-    padding: 0.75rem 1rem;
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    border: none;
-    border-radius: 0 var(--radius) var(--radius) 0;
-    cursor: pointer;
-}
-
-.nav-user {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.notification-bell {
-    position: relative;
-    cursor: pointer;
-}
-
-.notification-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: hsl(var(--error));
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-}
-
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
 
 .mobile-menu {
     display: none;
@@ -150,7 +15,7 @@ body {
 }
 
 .engagements-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .engagements-header h1 {
@@ -231,7 +96,8 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: hsl(var(--primary) / 0.9);
+    background-color: hsl(var(--primary-foreground) / 0.9);
+    color: hsl(var(--primary));
 }
 
 .btn-outline {
