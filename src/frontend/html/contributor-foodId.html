@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imbewu | Food Scanner</title>
-    <meta name="description" content="Identify food products and learn about their nutritional value and safety.">
+    <title>Imbewu | Vendor Product Verification</title>
+    <meta name="description" content="Verify your products and build customer trust with food safety verification.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="../images/icon.png" type="image/png">
     <link rel="stylesheet" href="../css/contributor-dashboard.css">
     <link rel="stylesheet" href="../css/contributor-dash.css">
-    <link rel="stylesheet" href="../css/foodId.css">
+    <link rel="stylesheet" href="../css/contributor-foodId.css">
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <a href="seeker-dashboard.html" class="logo">
+        <a href="contributor-dashboard.html" class="logo">
             <i class="fas fa-seedling logo-icon"></i>
             <span class="logo-text">Imbewu</span>
         </a>
         <div class="nav-search">
-            <input type="text" placeholder="Search food products by name..." class="search-input" id="foodSearchInput">
-            <button class="search-btn" id="foodSearchBtn"><i class="fas fa-search"></i></button>
+            <input type="text" placeholder="Search products by name..." class="search-input" id="productSearchInput">
+            <button class="search-btn" id="productSearchBtn"><i class="fas fa-search"></i></button>
         </div>
         <div class="nav-user">
             <div class="notification-bell">
@@ -29,7 +29,7 @@
             </div>
             <div class="user-profile">
                 <img src="../images/avatar-placeholder2.png" alt="User Profile" class="user-avatar">
-                <span class="user-name">Contributor</span>
+                <span class="user-name">Vendor</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
         </div>
@@ -55,16 +55,16 @@
                     <span>Overview</span>
                 </a>
                 <a href="contributor-foodId.html" class="nav-item active">
-                    <i class="fas fa-utensils"></i>
-                    <span>Food Scanner</span>
+                    <i class="fas fa-certificate"></i>
+                    <span>Product Verification</span>
                 </a>
                 <a href="community-engagement.html" class="nav-item">
                     <i class="fas fa-comments"></i>
                     <span>Community Engagement</span>
                 </a>
-                <a href="#elder-connections" class="nav-item">
-                    <i class="fas fa-handshake"></i>
-                    <span>Appointments</span>
+                <a href="contributor-reports.html" class="nav-item">
+                    <i class="fas fa-flag"></i>
+                    <span>Report Product</span>
                 </a>
             <div class="sidebar-footer">
                 <div class="cultural-badge">
@@ -78,37 +78,36 @@
             </div>
         </aside>
 
-
         <!-- Main Content -->
         <main class="dashboard-content">
-            <!-- Food Scanner Section -->
-            <section id="food-scanner" class="dashboard-section active">
+            <!-- Product Verification Section -->
+            <section id="product-verification" class="dashboard-section active">
                 <div class="welcome-banner">
-                    <h2>Food Scanner</h2>
-                    <p>Scan barcodes, analyze food images, or search for food products to check their nutritional information</p>
+                    <h2>Product Verification</h2>
+                    <p>Verify your products to build customer trust and ensure food safety compliance</p>
                 </div>
 
-                <!-- Scanner Options -->
-                <div class="scanner-options">
+                <!-- Verification Options -->
+                <div class="verification-options">
                     <div class="option-card active" id="barcodeOption">
                         <i class="fas fa-barcode"></i>
                         <h3>Scan Barcode</h3>
-                        <p>Use your camera to scan product barcodes</p>
+                        <p>Scan product barcodes for verification</p>
                     </div>
                     <div class="option-card" id="searchOption">
                         <i class="fas fa-search"></i>
                         <h3>Search Product</h3>
-                        <p>Search for products by name</p>
+                        <p>Search for products in our database</p>
                     </div>
                     <div class="option-card" id="manualOption">
                         <i class="fas fa-keyboard"></i>
                         <h3>Enter Barcode</h3>
                         <p>Manually enter the barcode number</p>
                     </div>
-                    <div class="option-card" id="plateAnalysisOption">
-                        <i class="fas fa-camera"></i>
-                        <h3>Food Plate Analysis</h3>
-                        <p>Analyze food images for nutrition info</p>
+                    <div class="option-card" id="newProductOption">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>New Product</h3>
+                        <p>Add a new product for verification</p>
                     </div>
                 </div>
 
@@ -140,65 +139,59 @@
                         <div class="input-group">
                             <label for="barcodeInput">Enter Barcode Number</label>
                             <input type="text" id="barcodeInput" placeholder="e.g., 3017624010701">
-                            <button class="btn btn-primary" id="submitBarcode">Search Product</button>
+                            <button class="btn btn-primary" id="submitBarcode">Verify Product</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Food Plate Analysis -->
-                <div class="scanner-section" id="plateAnalysis">
-                    <div class="plate-analysis-container">
-                        <div class="upload-methods">
-                            <div class="upload-option" id="uploadImageOption">
-                                <i class="fas fa-upload"></i>
-                                <h3>Upload Image</h3>
-                                <p>Select a food image from your device</p>
-                                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                                <button class="btn btn-outline" id="triggerUpload">Choose File</button>
-                            </div>
-                            <div class="upload-option" id="captureImageOption">
-                                <i class="fas fa-camera"></i>
-                                <h3>Take Photo</h3>
-                                <p>Use your camera to capture food</p>
-                                <button class="btn btn-outline" id="startCamera">Open Camera</button>
-                            </div>
-                            <div class="upload-option" id="urlImageOption">
-                                <i class="fas fa-link"></i>
-                                <h3>Image URL</h3>
-                                <p>Enter URL of a food image</p>
-                                <div class="url-input-group">
-                                    <input type="text" id="imageUrlInput" placeholder="https://example.com/food.jpg">
-                                    <button class="btn btn-primary" id="submitImageUrl">Analyze</button>
+                <!-- New Product Form -->
+                <div class="scanner-section" id="newProductForm">
+                    <div class="new-product-container">
+                        <h3>Add New Product for Verification</h3>
+                        <form id="productForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productName">Product Name *</label>
+                                    <input type="text" id="productName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productBrand">Brand Name *</label>
+                                    <input type="text" id="productBrand" required>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div id="cameraView" class="camera-view" style="display: none;">
-                            <video id="cameraFeed" autoplay playsinline></video>
-                            <div class="camera-controls">
-                                <button class="btn btn-outline" id="switchFoodCamera">
-                                    <i class="fas fa-sync-alt"></i> Switch Camera
-                                </button>
-                                <button class="btn btn-primary" id="captureFoodImage">
-                                    <i class="fas fa-camera"></i> Capture
-                                </button>
-                                <button class="btn btn-secondary" id="cancelCamera">
-                                    <i class="fas fa-times"></i> Cancel
-                                </button>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productBarcode">Barcode (if available)</label>
+                                    <input type="text" id="productBarcode">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productCategory">Category *</label>
+                                    <select id="productCategory" required>
+                                        <option value="">Select Category</option>
+                                        <option value="grains">Grains & Cereals</option>
+                                        <option value="fruits">Fruits & Vegetables</option>
+                                        <option value="dairy">Dairy Products</option>
+                                        <option value="meat">Meat & Poultry</option>
+                                        <option value="beverages">Beverages</option>
+                                        <option value="snacks">Snacks & Sweets</option>
+                                        <option value="condiments">Condiments & Spices</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div id="imagePreview" class="image-preview" style="display: none;">
-                            <img id="previewImage" src="" alt="Food preview">
-                            <div class="preview-controls">
-                                <button class="btn btn-outline" id="reanalyzeImage">
-                                    <i class="fas fa-redo"></i> Try Another
-                                </button>
-                                <button class="btn btn-primary" id="analyzeImage">
-                                    <i class="fas fa-search"></i> Analyze Food
-                                </button>
+                            <div class="form-group full-width">
+                                <label for="productIngredients">Ingredients List *</label>
+                                <textarea id="productIngredients" rows="3" required placeholder="List all ingredients, separated by commas"></textarea>
                             </div>
-                        </div>
+                            <div class="form-group full-width">
+                                <label for="productAllergens">Allergens Information</label>
+                                <textarea id="productAllergens" rows="2" placeholder="Contains: Milk, Soy, Nuts, etc."></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="cancelProduct">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Submit for Verification</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -211,9 +204,9 @@
                     </div>
                 </div>
 
-                <!-- Product Information -->
-                <div class="product-info-section" id="productInfo" style="display: none;">
-                    <div class="product-header">
+                <!-- Product Verification Information -->
+                <div class="verification-info-section" id="verificationInfo" style="display: none;">
+                    <div class="verification-header">
                         <div class="product-image" id="productImage">
                             <i class="fas fa-image" id="productPlaceholder"></i>
                         </div>
@@ -225,36 +218,44 @@
                                 <span id="productBarcode">0000000000000</span>
                             </div>
                         </div>
-                        <div class="product-grade" id="nutritionGrade">
-                            <span>?</span>
+                        <div class="verification-status" id="verificationStatus">
+                            <span class="verification-badge unverified-badge">
+                                <i class="fas fa-clock"></i> Unverified
+                            </span>
                         </div>
                     </div>
 
-                    <div class="product-tabs">
-                        <button class="tab-btn active" data-tab="nutrition">Nutrition</button>
-                        <button class="tab-btn" data-tab="ingredients">Ingredients</button>
-                        <button class="tab-btn" data-tab="safety">Safety Info</button>
+                    <div class="verification-tabs">
+                        <button class="tab-btn active" data-tab="compliance">Compliance Check</button>
+                        <button class="tab-btn" data-tab="ingredients">Ingredients Analysis</button>
+                        <button class="tab-btn" data-tab="safety">Safety Assessment</button>
+                        <button class="tab-btn" data-tab="history">Verification History</button>
                     </div>
 
-                    <div class="tab-content active" id="nutritionTab">
-                        <div class="nutrition-facts">
-                            <h3>Nutrition Facts</h3>
-                            <div class="nutrition-grid" id="nutritionGrid">
-                                <!-- Nutrition facts will be populated here -->
+                    <div class="tab-content active" id="complianceTab">
+                        <div class="compliance-checklist" id="complianceChecklist">
+                            <!-- Compliance checklist will be populated here -->
+                        </div>
+                        <div class="compliance-score">
+                            <h3>Compliance Score: <span id="complianceScoreValue">0%</span></h3>
+                            <div class="score-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="complianceProgress"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="nutri-score">
-                            <h3>Nutri-Score: <span id="nutriScoreValue">?</span></h3>
-                            <div class="score-explanation" id="scoreExplanation">
+                            <div class="score-explanation" id="complianceExplanation">
                                 <!-- Score explanation will be populated here -->
                             </div>
                         </div>
                     </div>
 
                     <div class="tab-content" id="ingredientsTab">
-                        <div class="ingredients-list">
-                            <h3>Ingredients</h3>
+                        <div class="ingredients-analysis">
+                            <h3>Ingredients Analysis</h3>
                             <p id="ingredientsText">No ingredients information available.</p>
+                            <div class="ingredients-warnings" id="ingredientsWarnings">
+                                <!-- Ingredients warnings will be populated here -->
+                            </div>
                         </div>
                         <div class="allergens-info">
                             <h3>Allergens</h3>
@@ -263,107 +264,39 @@
                     </div>
 
                     <div class="tab-content" id="safetyTab">
-                        <div class="safety-info">
-                            <h3>Food Safety Information</h3>
+                        <div class="safety-assessment">
+                            <h3>Food Safety Assessment</h3>
                             <div class="safety-status" id="safetyStatus">
                                 <i class="fas fa-question-circle"></i>
-                                <p>Safety information not available for this product.</p>
+                                <p>Safety assessment not available for this product.</p>
                             </div>
-                            <div class="safety-tips">
-                                <h4>Food Safety Tips</h4>
-                                <ul>
-                                    <li>Check expiration dates before consumption</li>
-                                    <li>Look for signs of tampering or damage to packaging</li>
-                                    <li>Store products according to package instructions</li>
-                                    <li>When in doubt, throw it out</li>
+                            <div class="safety-recommendations">
+                                <h4>Recommendations</h4>
+                                <ul id="safetyRecommendations">
+                                    <!-- Safety recommendations will be populated here -->
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <div class="product-actions">
-                        <button class="btn btn-outline" id="saveProduct">
-                            <i class="fas fa-bookmark"></i> Save Product
-                        </button>
-                        <button class="btn btn-primary" id="newScan">
-                            <i class="fas fa-redo"></i> Scan Another
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Food Analysis Results -->
-                <div class="food-analysis-section" id="foodAnalysis" style="display: none;">
-                    <div class="analysis-header">
-                        <h2>Food Plate Analysis</h2>
-                        <p>AI-powered analysis of your food image</p>
-                    </div>
-                    
-                    <div class="analysis-image">
-                        <img id="analyzedImage" src="" alt="Analyzed food">
-                    </div>
-                    
-                    <div class="analysis-tabs">
-                        <button class="tab-btn active" data-tab="foods">Foods Identified</button>
-                        <button class="tab-btn" data-tab="nutrition">Nutrition Summary</button>
-                        <button class="tab-btn" data-tab="insights">Health Insights</button>
-                    </div>
-                    
-                    <div class="tab-content active" id="foodsTab">
-                        <h3>Foods Identified</h3>
-                        <div class="foods-list" id="foodsList">
-                            <!-- Foods will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <div class="tab-content" id="nutritionTab">
-                        <h3>Nutrition Summary</h3>
-                        <div class="nutrition-summary" id="nutritionSummary">
-                            <!-- Nutrition summary will be populated here -->
-                        </div>
-                        <div class="macronutrient-chart">
-                            <h4>Macronutrient Distribution</h4>
-                            <div class="macronutrient-bars">
-                                <div class="macro-bar protein">
-                                    <div class="macro-label">Protein</div>
-                                    <div class="macro-bar-container">
-                                        <div class="macro-fill" id="proteinBar"></div>
-                                        <div class="macro-percent" id="proteinPercent"></div>
-                                    </div>
-                                </div>
-                                <div class="macro-bar carbs">
-                                    <div class="macro-label">Carbs</div>
-                                    <div class="macro-bar-container">
-                                        <div class="macro-fill" id="carbsBar"></div>
-                                        <div class="macro-percent" id="carbsPercent"></div>
-                                    </div>
-                                </div>
-                                <div class="macro-bar fats">
-                                    <div class="macro-label">Fats</div>
-                                    <div class="macro-bar-container">
-                                        <div class="macro-fill" id="fatsBar"></div>
-                                        <div class="macro-percent" id="fatsPercent"></div>
-                                    </div>
-                                </div>
+                    <div class="tab-content" id="historyTab">
+                        <div class="verification-history">
+                            <h3>Verification History</h3>
+                            <div id="verificationHistoryList">
+                                <!-- Verification history will be populated here -->
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="tab-content" id="insightsTab">
-                        <h3>Health Insights</h3>
-                        <div class="health-insights" id="healthInsights">
-                            <!-- Health insights will be populated here -->
-                        </div>
-                        <div class="dietary-flags" id="dietaryFlags">
-                            <!-- Dietary flags will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <div class="analysis-actions">
-                        <button class="btn btn-outline" id="saveAnalysis">
-                            <i class="fas fa-bookmark"></i> Save Analysis
+
+                    <div class="verification-actions">
+                        <button class="btn btn-outline" id="requestVerification">
+                            <i class="fas fa-certificate"></i> Request Verification
                         </button>
-                        <button class="btn btn-primary" id="newAnalysis">
-                            <i class="fas fa-redo"></i> Analyze Another
+                        <button class="btn btn-primary" id="generateCertificate" disabled>
+                            <i class="fas fa-award"></i> Generate Certificate
+                        </button>
+                        <button class="btn btn-secondary" id="newVerification">
+                            <i class="fas fa-redo"></i> Verify Another
                         </button>
                     </div>
                 </div>
@@ -372,7 +305,7 @@
                 <div class="loading-state" id="loadingState" style="display: none;">
                     <div class="loading-spinner">
                         <i class="fas fa-spinner fa-spin"></i>
-                        <p>Loading product information...</p>
+                        <p>Verifying product information...</p>
                     </div>
                 </div>
 
@@ -383,14 +316,15 @@
                         <h3>Product Not Found</h3>
                         <p id="errorMessage">We couldn't find information for this product.</p>
                         <button class="btn btn-primary" id="tryAgain">Try Again</button>
+                        <button class="btn btn-outline" id="addNewProduct">Add as New Product</button>
                     </div>
                 </div>
 
-                <!-- Recently Scanned -->
-                <div class="recently-scanned">
-                    <h3>Recently Scanned Foods</h3>
-                    <div class="scanned-list" id="recentScanned">
-                        <!-- Recently scanned items will be populated here -->
+                <!-- Recently Verified -->
+                <div class="recently-verified">
+                    <h3>Recently Verified Products</h3>
+                    <div class="verified-list" id="recentVerified">
+                        <!-- Recently verified items will be populated here -->
                     </div>
                 </div>
             </section>
@@ -399,8 +333,8 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="../js/auth.js"></script>
-    <script src="../js/foodId.js"></script>
     <script src="../js/contributor-foodId.js"></script>
 </body>
 </html>

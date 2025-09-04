@@ -12,6 +12,8 @@ const culturePracticeApi = require('./backend/cultural-practices-api');
 const appointmentsApi = require('./backend/appointments-api');
 const engagementsApi = require('./backend/engagements-api');
 const usersApi = require('./backend/users-api');
+const seekerReportsApi = require('./backend/seeker-reports-api');
+const contributorReportsApi = require('./backend/contributor-reports-api');
 
 // Create the Express application
 const app = express();
@@ -53,6 +55,8 @@ app.use('/api', culturePracticeApi);
 app.use('/api', appointmentsApi);
 app.use('/api', engagementsApi);
 app.use('/api', usersApi);
+app.use('/api', seekerReportsApi);
+app.use('/api', contributorReportsApi);
 // Serve CSS files from css directory
 app.use('/css', express.static(path.join(__dirname, 'frontend', 'css')));
 

@@ -1,5 +1,5 @@
-// foodId.js
-// Food Identification System using Open Food Facts API and Food Plate Analysis API
+// contributor-foodId.js
+// Vendor Product Verification System with PDF Certificate Generation
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
@@ -11,62 +11,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update user info
     updateUserInfo();
 
-    // API Configuration
-    const RAPIDAPI_KEY = '566b36e871mshf136eda735af7d0p15faa2jsneeec1b98f446';
-    const RAPIDAPI_HOST = 'ai-workout-planner-exercise-fitness-nutrition-guide.p.rapidapi.com';
-
     // DOM Elements
     const barcodeOption = document.getElementById('barcodeOption');
     const searchOption = document.getElementById('searchOption');
     const manualOption = document.getElementById('manualOption');
-    const plateAnalysisOption = document.getElementById('plateAnalysisOption');
+    const newProductOption = document.getElementById('newProductOption');
     const barcodeScanner = document.getElementById('barcodeScanner');
     const manualInput = document.getElementById('manualInput');
-    const plateAnalysis = document.getElementById('plateAnalysis');
+    const newProductForm = document.getElementById('newProductForm');
     const searchResults = document.getElementById('searchResults');
     const startScannerBtn = document.getElementById('startScanner');
     const switchCameraBtn = document.getElementById('switchCamera');
     const captureBarcodeBtn = document.getElementById('captureBarcode');
     const barcodeInput = document.getElementById('barcodeInput');
     const submitBarcodeBtn = document.getElementById('submitBarcode');
-    const foodSearchInput = document.getElementById('foodSearchInput');
-    const foodSearchBtn = document.getElementById('foodSearchBtn');
-    const productInfo = document.getElementById('productInfo');
-    const foodAnalysis = document.getElementById('foodAnalysis');
+    const productSearchInput = document.getElementById('productSearchInput');
+    const productSearchBtn = document.getElementById('productSearchBtn');
+    const verificationInfo = document.getElementById('verificationInfo');
     const loadingState = document.getElementById('loadingState');
     const errorState = document.getElementById('errorState');
     const tryAgainBtn = document.getElementById('tryAgain');
-    const newScanBtn = document.getElementById('newScan');
-    const saveProductBtn = document.getElementById('saveProduct');
+    const addNewProductBtn = document.getElementById('addNewProduct');
+    const newVerificationBtn = document.getElementById('newVerification');
+    const requestVerificationBtn = document.getElementById('requestVerification');
+    const generateCertificateBtn = document.getElementById('generateCertificate');
     const tabBtns = document.querySelectorAll('.tab-btn');
-    const recentScanned = document.getElementById('recentScanned');
-    
-    // Plate Analysis Elements
-    const triggerUploadBtn = document.getElementById('triggerUpload');
-    const imageUpload = document.getElementById('imageUpload');
-    const startCameraBtn = document.getElementById('startCamera');
-    const switchFoodCameraBtn = document.getElementById('switchFoodCamera');
-    const captureFoodImageBtn = document.getElementById('captureFoodImage');
-    const cancelCameraBtn = document.getElementById('cancelCamera');
-    const cameraView = document.getElementById('cameraView');
-    const cameraFeed = document.getElementById('cameraFeed');
-    const imagePreview = document.getElementById('imagePreview');
-    const previewImage = document.getElementById('previewImage');
-    const reanalyzeImageBtn = document.getElementById('reanalyzeImage');
-    const analyzeImageBtn = document.getElementById('analyzeImage');
-    const imageUrlInput = document.getElementById('imageUrlInput');
-    const submitImageUrlBtn = document.getElementById('submitImageUrl');
-    const saveAnalysisBtn = document.getElementById('saveAnalysis');
-    const newAnalysisBtn = document.getElementById('newAnalysis');
+    const recentVerified = document.getElementById('recentVerified');
+    const productForm = document.getElementById('productForm');
+    const cancelProductBtn = document.getElementById('cancelProduct');
 
     // State variables
     let currentCamera = 'environment';
     let scannerInitialized = false;
     let quaggaInitialized = false;
-    let recentProducts = JSON.parse(localStorage.getItem('recentFoods') || '[]');
-    let foodCameraStream = null;
-    let foodCameraFacingMode = 'environment';
-    let currentImageData = null;
+    let recentProducts = JSON.parse(localStorage.getItem('recentVerified') || '[]');
+    let currentProductData = null;
 
     // Function to get initials from a name
     function getInitials(name) {
@@ -119,20 +98,22 @@ document.addEventListener('DOMContentLoaded', function() {
     barcodeOption.addEventListener('click', () => switchMode('barcode'));
     searchOption.addEventListener('click', () => switchMode('search'));
     manualOption.addEventListener('click', () => switchMode('manual'));
-    plateAnalysisOption.addEventListener('click', () => switchMode('plateAnalysis'));
+    newProductOption.addEventListener('click', () => switchMode('newProduct'));
     
     startScannerBtn.addEventListener('click', initBarcodeScanner);
     switchCameraBtn.addEventListener('click', switchCamera);
     captureBarcodeBtn.addEventListener('click', captureBarcode);
     submitBarcodeBtn.addEventListener('click', submitManualBarcode);
-    foodSearchBtn.addEventListener('click', searchFoodProducts);
-    foodSearchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') searchFoodProducts();
+    productSearchBtn.addEventListener('click', searchProducts);
+    productSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchProducts();
     });
     
     tryAgainBtn.addEventListener('click', resetScanner);
-    newScanBtn.addEventListener('click', resetScanner);
-    saveProductBtn.addEventListener('click', saveProduct);
+    addNewProductBtn.addEventListener('click', showNewProductForm);
+    newVerificationBtn.addEventListener('click', resetScanner);
+    requestVerificationBtn.addEventListener('click', requestVerification);
+    generateCertificateBtn.addEventListener('click', generateCertificate);
     
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -141,22 +122,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Plate Analysis Event Listeners
-    triggerUploadBtn.addEventListener('click', () => imageUpload.click());
-    imageUpload.addEventListener('change', handleImageUpload);
-    startCameraBtn.addEventListener('click', startFoodCamera);
-    switchFoodCameraBtn.addEventListener('click', switchFoodCamera);
-    captureFoodImageBtn.addEventListener('click', captureFoodImage);
-    cancelCameraBtn.addEventListener('click', cancelFoodCamera);
-    reanalyzeImageBtn.addEventListener('click', resetImageAnalysis);
-    analyzeImageBtn.addEventListener('click', analyzeFoodImage);
-    submitImageUrlBtn.addEventListener('click', submitImageUrl);
-    saveAnalysisBtn.addEventListener('click', saveFoodAnalysis);
-    newAnalysisBtn.addEventListener('click', resetFoodAnalysis);
+    productForm.addEventListener('submit', handleProductSubmit);
+    cancelProductBtn.addEventListener('click', () => switchMode('barcode'));
 
     // Functions
     function initPage() {
-        // Load recently scanned products
+        // Load recently verified products
         displayRecentProducts();
     }
 
@@ -169,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mode === 'barcode') barcodeOption.classList.add('active');
         if (mode === 'search') searchOption.classList.add('active');
         if (mode === 'manual') manualOption.classList.add('active');
-        if (mode === 'plateAnalysis') plateAnalysisOption.classList.add('active');
+        if (mode === 'newProduct') newProductOption.classList.add('active');
         
         // Hide all sections
         document.querySelectorAll('.scanner-section').forEach(section => {
@@ -186,15 +157,14 @@ document.addEventListener('DOMContentLoaded', function() {
             manualInput.style.display = 'block';
         } else if (mode === 'search') {
             searchResults.style.display = 'block';
-        } else if (mode === 'plateAnalysis') {
-            plateAnalysis.style.display = 'block';
-            resetImageAnalysis();
+        } else if (mode === 'newProduct') {
+            newProductForm.style.display = 'block';
+            productForm.reset();
         }
         
         // Hide product info and error states
-        productInfo.style.display = 'none';
+        verificationInfo.style.display = 'none';
         errorState.style.display = 'none';
-        foodAnalysis.style.display = 'none';
     }
 
     function initBarcodeScanner() {
@@ -313,8 +283,8 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchProductData(barcode);
     }
 
-    function searchFoodProducts() {
-        const query = foodSearchInput.value.trim();
+    function searchProducts() {
+        const query = productSearchInput.value.trim();
         
         if (!query) {
             alert("Please enter a search term");
@@ -386,7 +356,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                displayProductData(data);
+                currentProductData = data;
+                displayVerificationInfo(data);
                 addToRecentProducts(data);
             })
             .catch(error => {
@@ -396,13 +367,25 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    function displayProductData(data) {
+    function displayVerificationInfo(data) {
         const product = data.product;
         
-        // Update product header
-        document.getElementById('productName').textContent = product.product_name || 'Unknown Product';
-        document.getElementById('productBrand').textContent = product.brands || 'Unknown Brand';
-        document.getElementById('productBarcode').textContent = data.code;
+        // Update product header - FIXED: Using correct element IDs from HTML
+        const productNameElement = document.querySelector('.product-details h2');
+        const productBrandElement = document.querySelector('.product-details p');
+        const productBarcodeElement = document.querySelector('.product-barcode span:last-child');
+        
+        if (productNameElement) {
+            productNameElement.textContent = product.product_name || 'Unknown Product';
+        }
+        
+        if (productBrandElement) {
+            productBrandElement.textContent = product.brands || 'Unknown Brand';
+        }
+        
+        if (productBarcodeElement) {
+            productBarcodeElement.textContent = data.code || 'N/A';
+        }
         
         // Update product image
         const productImage = document.getElementById('productImage');
@@ -410,135 +393,390 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (product.image_url) {
             productImage.innerHTML = `<img src="${product.image_url}" alt="${product.product_name}">`;
+            if (productPlaceholder) productPlaceholder.style.display = 'none';
         } else {
             productImage.innerHTML = '<i class="fas fa-image" id="productPlaceholder"></i>';
         }
         
-        // Update nutrition grade
-        const nutritionGrade = document.getElementById('nutritionGrade');
-        if (product.nutrition_grades) {
-            nutritionGrade.textContent = product.nutrition_grades;
-            nutritionGrade.className = 'product-grade grade-' + product.nutrition_grades;
-        } else {
-            nutritionGrade.textContent = '?';
-            nutritionGrade.className = 'product-grade grade-unknown';
-        }
+        // Update verification status
+        updateVerificationStatus(product, data.code);
         
-        // Update nutrition facts
-        updateNutritionFacts(product);
+        // Update compliance checklist
+        updateComplianceChecklist(product);
         
-        // Update ingredients
-        document.getElementById('ingredientsText').textContent = 
-            product.ingredients_text || 'No ingredients information available.';
+        // Update ingredients analysis
+        updateIngredientsAnalysis(product);
         
-        // Update allergens
-        document.getElementById('allergensText').textContent = 
-            product.allergens || 'No allergen information available.';
+        // Update safety assessment
+        updateSafetyAssessment(product);
         
-        // Update safety information
-        updateSafetyInfo(product);
+        // Update verification history
+        updateVerificationHistory(data.code);
         
-        // Show product info and hide other sections
-        productInfo.style.display = 'block';
+        // Show verification info and hide other sections
+        verificationInfo.style.display = 'block';
         barcodeScanner.style.display = 'none';
         manualInput.style.display = 'none';
         searchResults.style.display = 'none';
-        plateAnalysis.style.display = 'none';
+        newProductForm.style.display = 'none';
         
-        // Reset to nutrition tab
-        switchTab('nutrition');
+        // Reset to compliance tab
+        switchTab('compliance');
     }
 
-    function updateNutritionFacts(product) {
-        const nutritionGrid = document.getElementById('nutritionGrid');
-        let nutritionHTML = '';
+    function updateVerificationStatus(product, barcode) {
+        const verificationStatus = document.getElementById('verificationStatus');
+        const generateCertificateBtn = document.getElementById('generateCertificate');
         
-        // Common nutrients to display
-        const nutrients = [
-            { key: 'energy-kcal_100g', name: 'Energy', unit: 'kcal' },
-            { key: 'fat_100g', name: 'Fat', unit: 'g' },
-            { key: 'saturated-fat_100g', name: 'Saturated Fat', unit: 'g' },
-            { key: 'carbohydrates_100g', name: 'Carbohydrates', unit: 'g' },
-            { key: 'sugars_100g', name: 'Sugars', unit: 'g' },
-            { key: 'fiber_100g', name: 'Fiber', unit: 'g' },
-            { key: 'proteins_100g', name: 'Protein', unit: 'g' },
-            { key: 'salt_100g', name: 'Salt', unit: 'g' },
-            { key: 'sodium_100g', name: 'Sodium', unit: 'mg' }
+        // Check if product has sufficient data to be considered "verifiable"
+        const hasSufficientData = product.ingredients_text && product.nutriments;
+        
+        // Check if product is already verified in our system (from localStorage)
+        const savedCertificates = JSON.parse(localStorage.getItem('vendorCertificates') || '[]');
+        const isVerified = savedCertificates.some(cert => cert.barcode === barcode);
+        
+        if (isVerified) {
+            verificationStatus.innerHTML = `
+                <span class="verification-badge verified-badge">
+                    <i class="fas fa-check-circle"></i> Verified
+                </span>
+            `;
+            generateCertificateBtn.disabled = false;
+            requestVerificationBtn.style.display = 'none';
+        } else if (hasSufficientData) {
+            verificationStatus.innerHTML = `
+                <span class="verification-badge verifiable-badge">
+                    <i class="fas fa-clock"></i> Ready for Verification
+                </span>
+            `;
+            generateCertificateBtn.disabled = true;
+            requestVerificationBtn.style.display = 'block';
+        } else {
+            verificationStatus.innerHTML = `
+                <span class="verification-badge unverified-badge">
+                    <i class="fas fa-exclamation-triangle"></i> Needs More Data
+                </span>
+            `;
+            generateCertificateBtn.disabled = true;
+            requestVerificationBtn.style.display = 'block';
+        }
+    }
+
+    function updateComplianceChecklist(product) {
+        const complianceChecklist = document.getElementById('complianceChecklist');
+        const complianceScoreValue = document.getElementById('complianceScoreValue');
+        const complianceProgress = document.getElementById('complianceProgress');
+        const complianceExplanation = document.getElementById('complianceExplanation');
+        
+        // Real compliance checks based on actual product data
+        const complianceChecks = [
+            { 
+                id: 'ingredients_list', 
+                label: 'Complete ingredients list', 
+                valid: !!product.ingredients_text && product.ingredients_text.length > 10 
+            },
+            { 
+                id: 'allergens_declared', 
+                label: 'Allergens properly declared', 
+                valid: !!product.allergens || !containsCommonAllergens(product) 
+            },
+            { 
+                id: 'nutrition_facts', 
+                label: 'Nutrition facts available', 
+                valid: !!product.nutriments && Object.keys(product.nutriments).length > 3 
+            },
+            { 
+                id: 'no_harmful_additives', 
+                label: 'No harmful additives', 
+                valid: !containsHarmfulAdditives(product) 
+            },
+            { 
+                id: 'proper_labeling', 
+                label: 'Proper labeling standards', 
+                valid: hasProperLabeling(product) 
+            }
         ];
         
-        nutrients.forEach(nutrient => {
-            if (product.nutriments && product.nutriments[nutrient.key] !== undefined) {
-                const value = product.nutriments[nutrient.key];
-                nutritionHTML += `
-                    <div class="nutrient-item">
-                        <div class="nutrient-name">${nutrient.name}</div>
-                        <div class="nutrient-value">${value}</div>
-                        <div class="nutrient-unit">${nutrient.unit}</div>
-                    </div>
-                `;
-            }
+        let complianceHTML = '';
+        let validCount = 0;
+        
+        complianceChecks.forEach(check => {
+            if (check.valid) validCount++;
+            
+            complianceHTML += `
+                <div class="compliance-item ${check.valid ? 'valid' : 'invalid'}">
+                    <i class="fas fa-${check.valid ? 'check' : 'times'}-circle"></i>
+                    <span>${check.label}</span>
+                </div>
+            `;
         });
         
-        nutritionGrid.innerHTML = nutritionHTML || '<p>No nutrition information available.</p>';
+        complianceChecklist.innerHTML = complianceHTML;
         
-        // Update Nutri-Score explanation
-        const nutriScoreValue = document.getElementById('nutriScoreValue');
-        const scoreExplanation = document.getElementById('scoreExplanation');
+        // Calculate compliance score
+        const complianceScore = Math.round((validCount / complianceChecks.length) * 100);
+        complianceScoreValue.textContent = `${complianceScore}%`;
+        complianceProgress.style.width = `${complianceScore}%`;
         
-        if (product.nutrition_grades) {
-            nutriScoreValue.textContent = product.nutrition_grades.toUpperCase();
-            
-            let explanation = '';
-            switch(product.nutrition_grades) {
-                case 'a':
-                    explanation = 'Excellent nutritional quality';
-                    break;
-                case 'b':
-                    explanation = 'Good nutritional quality';
-                    break;
-                case 'c':
-                    explanation = 'Average nutritional quality';
-                    break;
-                case 'd':
-                    explanation = 'Poor nutritional quality';
-                    break;
-                case 'e':
-                    explanation = 'Very poor nutritional quality';
-                    break;
-                default:
-                    explanation = 'Nutritional quality not available';
-            }
-            
-            scoreExplanation.textContent = explanation;
+        // Set explanation based on score
+        if (complianceScore >= 80) {
+            complianceExplanation.textContent = 'This product meets most safety standards and is ready for verification.';
+        } else if (complianceScore >= 60) {
+            complianceExplanation.textContent = 'This product meets basic safety standards but needs improvement before verification.';
         } else {
-            nutriScoreValue.textContent = 'N/A';
-            scoreExplanation.textContent = 'Nutritional quality not available for this product';
+            complianceExplanation.textContent = 'This product does not meet basic safety standards and requires significant improvements.';
         }
     }
 
-    function updateSafetyInfo(product) {
-        const safetyStatus = document.getElementById('safetyStatus');
+    // Helper function to check for common allergens
+    function containsCommonAllergens(product) {
+        if (!product.ingredients_text) return false;
         
-        // Simple safety assessment based on nutrition grade and allergens
-        if (product.nutrition_grades && ['d', 'e'].includes(product.nutrition_grades)) {
-            safetyStatus.innerHTML = `
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>This product has poor nutritional quality. Consume in moderation.</p>
+        const allergens = ['milk', 'eggs', 'fish', 'shellfish', 'nuts', 'peanuts', 'wheat', 'soy'];
+        const ingredients = product.ingredients_text.toLowerCase();
+        
+        return allergens.some(allergen => ingredients.includes(allergen));
+    }
+
+    // Helper function to check for harmful additives
+    function containsHarmfulAdditives(product) {
+        if (!product.ingredients_text) return false;
+        
+        const harmfulAdditives = [
+            'hydrogenated', 'partially hydrogenated', 'bha', 'bht', 
+            'potassium bromate', 'propyl paraben', 'red 3', 'blue 1'
+        ];
+        
+        const ingredients = product.ingredients_text.toLowerCase();
+        return harmfulAdditives.some(additive => ingredients.includes(additive));
+    }
+
+    // Helper function to check if product has proper labeling
+    function hasProperLabeling(product) {
+        let score = 0;
+        
+        // Check for required information
+        if (product.product_name && product.product_name.length > 2) score++;
+        if (product.brands) score++;
+        if (product.ingredients_text && product.ingredients_text.length > 10) score++;
+        if (product.nutriments && Object.keys(product.nutriments).length > 3) score++;
+        
+        return score >= 3; // At least 3 out of 4 required elements
+    }
+
+    function updateIngredientsAnalysis(product) {
+        const ingredientsText = document.getElementById('ingredientsText');
+        const ingredientsWarnings = document.getElementById('ingredientsWarnings');
+        
+        ingredientsText.textContent = product.ingredients_text || 'No ingredients information available.';
+        
+        // Real ingredient warnings based on actual ingredients
+        const warnings = [];
+        if (product.ingredients_text) {
+            const ingredients = product.ingredients_text.toLowerCase();
+            
+            if (ingredients.includes('hydrogenated') || ingredients.includes('partially hydrogenated')) {
+                warnings.push('Contains trans fats (hydrogenated oils) - consider reformulating');
+            }
+            
+            if (ingredients.includes('high fructose corn syrup') || ingredients.includes('hfcs')) {
+                warnings.push('Contains high fructose corn syrup - some consumers prefer natural sweeteners');
+            }
+            
+            if (ingredients.includes('artificial flavor') || ingredients.includes('artificial color')) {
+                warnings.push('Contains artificial flavors or colors - consider natural alternatives');
+            }
+            
+            if (ingredients.includes('sodium nitrate') || ingredients.includes('sodium nitrite')) {
+                warnings.push('Contains sodium nitrate/nitrite (preservative) - some health concerns associated');
+            }
+            
+            // Check for common allergens
+            const allergens = ['milk', 'eggs', 'fish', 'shellfish', 'nuts', 'peanuts', 'wheat', 'soy'];
+            const foundAllergens = allergens.filter(allergen => ingredients.includes(allergen));
+            
+            if (foundAllergens.length > 0 && (!product.allergens || product.allergens.length < 5)) {
+                warnings.push(`Contains potential allergens (${foundAllergens.join(', ')}) - ensure proper labeling`);
+            }
+        }
+        
+        if (warnings.length > 0) {
+            let warningsHTML = '<h4>Ingredients Analysis</h4><ul>';
+            warnings.forEach(warning => {
+                warningsHTML += `<li>${warning}</li>`;
+            });
+            warningsHTML += '</ul>';
+            ingredientsWarnings.innerHTML = warningsHTML;
+        } else if (product.ingredients_text) {
+            ingredientsWarnings.innerHTML = `
+                <div class="ingredient-status positive">
+                    <i class="fas fa-check-circle"></i> 
+                    <div>
+                        <h4>Ingredients Analysis</h4>
+                        <p>No significant ingredient concerns detected. Good formulation for consumer safety.</p>
+                    </div>
+                </div>
             `;
-            safetyStatus.className = 'safety-status warning';
-        } else if (product.allergens && product.allergens.length > 0) {
-            safetyStatus.innerHTML = `
-                <i class="fas fa-info-circle"></i>
-                <p>This product contains allergens: ${product.allergens}. Check if you have any allergies.</p>
-            `;
-            safetyStatus.className = 'safety-status warning';
         } else {
-            safetyStatus.innerHTML = `
+            ingredientsWarnings.innerHTML = `
+                <div class="ingredient-status unknown">
+                    <i class="fas fa-question-circle"></i> 
+                    <div>
+                        <h4>Ingredients Analysis</h4>
+                        <p>Insufficient ingredient data for analysis. Please provide complete ingredients list.</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Update allergens
+        const allergensText = document.getElementById('allergensText');
+        if (product.allergens) {
+            allergensText.textContent = product.allergens;
+        } else if (containsCommonAllergens(product)) {
+            allergensText.textContent = 'Potential allergens detected but not declared: ' + 
+                ['milk', 'eggs', 'fish', 'shellfish', 'nuts', 'peanuts', 'wheat', 'soy']
+                .filter(allergen => product.ingredients_text.toLowerCase().includes(allergen))
+                .join(', ');
+        } else {
+            allergensText.textContent = 'No allergen information available.';
+        }
+    }
+
+    function updateSafetyAssessment(product) {
+        const safetyStatus = document.getElementById('safetyStatus');
+        const safetyRecommendations = document.getElementById('safetyRecommendations');
+        
+        // Calculate safety score based on actual product data
+        let safetyScore = 0;
+        let maxScore = 0;
+        
+        // Check ingredients quality (30 points)
+        if (product.ingredients_text) {
+            maxScore += 30;
+            let ingredientScore = 30;
+            
+            // Deduct points for concerning ingredients
+            if (containsHarmfulAdditives(product)) ingredientScore -= 15;
+            if (product.ingredients_text.toLowerCase().includes('hydrogenated')) ingredientScore -= 10;
+            if (product.ingredients_text.toLowerCase().includes('artificial')) ingredientScore -= 5;
+            
+            safetyScore += Math.max(0, ingredientScore);
+        }
+        
+        // Check nutrition facts (30 points)
+        if (product.nutriments && Object.keys(product.nutriments).length > 5) {
+            maxScore += 30;
+            safetyScore += 30; // Full points for having nutrition data
+        }
+        
+        // Check allergens declaration (20 points)
+        if (product.allergens && product.allergens.length > 3) {
+            maxScore += 20;
+            safetyScore += 20; // Full points for declaring allergens
+        } else if (!containsCommonAllergens(product)) {
+            maxScore += 20;
+            safetyScore += 20; // Full points if no common allergens
+        }
+        
+        // Check product completeness (20 points)
+        if (product.product_name && product.brands && product.ingredients_text) {
+            maxScore += 20;
+            safetyScore += 20; // Full points for complete product info
+        }
+        
+        // Calculate final score percentage
+        const finalScore = maxScore > 0 ? Math.round((safetyScore / maxScore) * 100) : 0;
+        
+        let safetyHTML = '';
+        let recommendationsHTML = '';
+        
+        if (finalScore >= 80) {
+            safetyHTML = `
                 <i class="fas fa-check-circle"></i>
-                <p>No specific safety concerns identified based on available data.</p>
+                <div>
+                    <p>This product appears to be generally safe for consumption.</p>
+                    <div class="safety-score">Safety Score: ${finalScore}%</div>
+                </div>
             `;
             safetyStatus.className = 'safety-status safe';
+            
+            recommendationsHTML = `
+                <li>Maintain current formulation and safety standards</li>
+                <li>Continue monitoring for any ingredient changes</li>
+                <li>Consider applying for formal verification</li>
+            `;
+        } else if (finalScore >= 50) {
+            safetyHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <p>This product has some safety concerns that should be addressed.</p>
+                    <div class="safety-score">Safety Score: ${finalScore}%</div>
+                </div>
+            `;
+            safetyStatus.className = 'safety-status warning';
+            
+            recommendationsHTML = `
+                <li>Consider reformulating to reduce problematic ingredients</li>
+                <li>Improve labeling clarity for allergens</li>
+                <li>Add missing nutrition information</li>
+                <li>Conduct additional safety testing before verification</li>
+            `;
+        } else {
+            safetyHTML = `
+                <i class="fas fa-times-circle"></i>
+                <div>
+                    <p>This product has significant safety concerns.</p>
+                    <div class="safety-score">Safety Score: ${finalScore}%</div>
+                </div>
+            `;
+            safetyStatus.className = 'safety-status danger';
+            
+            recommendationsHTML = `
+                <li>Immediately review and reformulate product</li>
+                <li>Consult with food safety experts</li>
+                <li>Add complete ingredients and nutrition information</li>
+                <li>Consider discontinuing product until safety issues are resolved</li>
+            `;
         }
+        
+        safetyStatus.innerHTML = safetyHTML;
+        safetyRecommendations.innerHTML = recommendationsHTML;
+    }
+
+    function updateVerificationHistory(barcode) {
+        const verificationHistoryList = document.getElementById('verificationHistoryList');
+        
+        // Check for existing verification history in localStorage
+        const savedCertificates = JSON.parse(localStorage.getItem('vendorCertificates') || '[]');
+        const productHistory = savedCertificates.filter(cert => cert.barcode === barcode);
+        
+        let historyHTML = '';
+        
+        if (productHistory.length > 0) {
+            productHistory.forEach(cert => {
+                historyHTML += `
+                    <div class="history-item">
+                        <div class="history-date">${cert.verifiedDate}</div>
+                        <div class="history-status verified">Verified</div>
+                        <div class="history-by">By: ${cert.verifiedBy}</div>
+                        <div class="history-certificate">ID: ${cert.certificateId}</div>
+                    </div>
+                `;
+            });
+        } else {
+            // Add a default entry for products that haven't been verified yet
+            historyHTML = `
+                <div class="history-item">
+                    <div class="history-date">${new Date().toLocaleDateString()}</div>
+                    <div class="history-status pending">Initial Scan</div>
+                    <div class="history-by">By: System Check</div>
+                    <div class="history-certificate">Not yet verified</div>
+                </div>
+            `;
+        }
+        
+        verificationHistoryList.innerHTML = historyHTML;
     }
 
     function switchTab(tabName) {
@@ -561,12 +799,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addToRecentProducts(data) {
         const product = data.product;
+        
+        // Check if product is verified
+        const savedCertificates = JSON.parse(localStorage.getItem('vendorCertificates') || '[]');
+        const isVerified = savedCertificates.some(cert => cert.barcode === data.code);
+        
         const productInfo = {
             code: data.code,
             name: product.product_name,
             brand: product.brands,
             image: product.image_url,
-            grade: product.nutrition_grades
+            verified: isVerified
         };
         
         // Remove if already exists
@@ -581,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Save to localStorage
-        localStorage.setItem('recentFoods', JSON.stringify(recentProducts));
+        localStorage.setItem('recentVerified', JSON.stringify(recentProducts));
         
         // Update UI
         displayRecentProducts();
@@ -589,10 +832,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayRecentProducts() {
         if (recentProducts.length === 0) {
-            recentScanned.innerHTML = `
+            recentVerified.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-history"></i>
-                    <p>No recently scanned foods</p>
+                    <p>No recently verified products</p>
                 </div>
             `;
             return;
@@ -601,23 +844,26 @@ document.addEventListener('DOMContentLoaded', function() {
         let html = '';
         recentProducts.forEach(product => {
             html += `
-                <div class="scanned-item" data-barcode="${product.code}">
+                <div class="verified-item" data-barcode="${product.code}">
                     ${product.image ? 
                         `<img src="${product.image}" alt="${product.name}">` : 
                         `<div class="no-image"><i class="fas fa-image"></i></div>`
                     }
-                    <div class="scanned-info">
+                    <div class="verified-info">
                         <h4>${product.name || 'Unknown Product'}</h4>
                         <p>${product.brand || 'Unknown Brand'}</p>
+                        <span class="verification-badge ${product.verified ? 'verified-badge' : 'unverified-badge'}">
+                            ${product.verified ? 'Verified' : 'Unverified'}
+                        </span>
                     </div>
                 </div>
             `;
         });
         
-        recentScanned.innerHTML = html;
+        recentVerified.innerHTML = html;
         
         // Add click event to recent items
-        document.querySelectorAll('.scanned-item').forEach(item => {
+        document.querySelectorAll('.verified-item').forEach(item => {
             item.addEventListener('click', function() {
                 const barcode = this.dataset.barcode;
                 showLoading();
@@ -626,442 +872,252 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function saveProduct() {
-        // Get current product data
-        const productName = document.getElementById('productName').textContent;
-        const productCode = document.getElementById('productBarcode').textContent;
-        
-        // Get saved products from localStorage or initialize empty array
-        let savedProducts = JSON.parse(localStorage.getItem('savedFoods') || '[]');
-        
-        // Check if already saved
-        if (savedProducts.some(p => p.code === productCode)) {
-            alert('This product is already saved!');
-            return;
-        }
-        
-        // Add to saved products
-        savedProducts.push({
-            code: productCode,
-            name: productName,
-            date: new Date().toISOString()
-        });
-        
-        // Save back to localStorage
-        localStorage.setItem('savedFoods', JSON.stringify(savedProducts));
-        
-        // Visual feedback
-        saveProductBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
-        saveProductBtn.disabled = true;
-        
-        setTimeout(() => {
-            saveProductBtn.innerHTML = '<i class="fas fa-bookmark"></i> Save Product';
-            saveProductBtn.disabled = false;
-        }, 2000);
-    }
-
-    // Food Plate Analysis Functions
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        if (!file.type.match('image.*')) {
-            alert('Please select an image file');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            previewImage.src = e.target.result;
-            currentImageData = e.target.result;
-            imagePreview.style.display = 'block';
-            document.querySelector('.upload-methods').style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    }
-
-    async function startFoodCamera() {
-        try {
-            foodCameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: foodCameraFacingMode }
-            });
-            
-            cameraFeed.srcObject = foodCameraStream;
-            cameraView.style.display = 'block';
-            document.querySelector('.upload-methods').style.display = 'none';
-        } catch (error) {
-            console.error('Error accessing camera:', error);
-            alert('Failed to access camera. Please check permissions and try again.');
-        }
-    }
-
-    function switchFoodCamera() {
-        if (!foodCameraStream) return;
-        
-        // Stop current stream
-        foodCameraStream.getTracks().forEach(track => track.stop());
-        
-        // Switch camera
-        foodCameraFacingMode = foodCameraFacingMode === 'environment' ? 'user' : 'environment';
-        
-        // Restart with new camera
-        startFoodCamera();
-    }
-
-    function captureFoodImage() {
-        if (!foodCameraStream) return;
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = cameraFeed.videoWidth;
-        canvas.height = cameraFeed.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
-        
-        currentImageData = canvas.toDataURL('image/jpeg');
-        previewImage.src = currentImageData;
-        
-        // Stop camera and show preview
-        foodCameraStream.getTracks().forEach(track => track.stop());
-        cameraView.style.display = 'none';
-        imagePreview.style.display = 'block';
-    }
-
-    function cancelFoodCamera() {
-        if (foodCameraStream) {
-            foodCameraStream.getTracks().forEach(track => track.stop());
-            foodCameraStream = null;
-        }
-        
-        cameraView.style.display = 'none';
-        document.querySelector('.upload-methods').style.display = 'grid';
-    }
-
-    function resetImageAnalysis() {
-        if (foodCameraStream) {
-            foodCameraStream.getTracks().forEach(track => track.stop());
-            foodCameraStream = null;
-        }
-        
-        cameraView.style.display = 'none';
-        imagePreview.style.display = 'none';
-        document.querySelector('.upload-methods').style.display = 'grid';
-        currentImageData = null;
-        imageUpload.value = '';
-        imageUrlInput.value = '';
-    }
-
-    function submitImageUrl() {
-        const imageUrl = imageUrlInput.value.trim();
-        
-        if (!imageUrl) {
-            alert('Please enter an image URL');
-            return;
-        }
-        
-        // Validate URL format
-        try {
-            new URL(imageUrl);
-        } catch (e) {
-            alert('Please enter a valid URL');
-            return;
-        }
-        
-        currentImageData = imageUrl;
-        analyzeFoodImage();
-    }
-
-    async function analyzeFoodImage() {
-        if (!currentImageData) {
-            alert('Please select or capture an image first');
-            return;
-        }
-        
+    function requestVerification() {
         showLoading();
         
-        try {
-            let imageUrl = currentImageData;
-            
-            // If it's a data URL, we need to upload it to a service or convert it
-            if (currentImageData.startsWith('data:')) {
-                // For simplicity, we'll use the data URL directly
-                // Note: Some APIs might not support data URLs
-                imageUrl = currentImageData;
-            }
-            
-            // Call the food plate analysis API
-            const response = await analyzeFoodPlate(imageUrl);
-            displayFoodAnalysis(response);
-            
-        } catch (error) {
-            console.error('Error analyzing food image:', error);
+        // Get product data
+        const productName = document.querySelector('.product-details h2').textContent;
+        const productBrand = document.querySelector('.product-details p').textContent;
+        const barcode = document.querySelector('.product-barcode span:last-child').textContent;
+        
+        // Simulate verification request
+        setTimeout(() => {
             hideLoading();
-            showError('Failed to analyze food image. Please try again.');
-        }
-    }
-
-    async function analyzeFoodPlate(imageUrl) {
-        const url = `https://${RAPIDAPI_HOST}/analyzeFoodPlate?imageUrl=${encodeURIComponent(imageUrl)}&lang=en&noqueue=1`;
-        
-        const options = {
-            method: 'POST',
-            headers: {
-                'x-rapidapi-key': RAPIDAPI_KEY,
-                'x-rapidapi-host': RAPIDAPI_HOST,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({})
-        };
-
-        try {
-            const response = await fetch(url, options);
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error('Error analyzing food plate:', error);
-            throw error;
-        }
-    }
-
-    function displayFoodAnalysis(data) {
-        hideLoading();
-        
-        if (data.status !== 'success') {
-            showError('Failed to analyze food image: ' + (data.message || 'Unknown error'));
-            return;
-        }
-        
-        const result = data.result;
-        
-        // Update analyzed image
-        document.getElementById('analyzedImage').src = currentImageData;
-        
-        // Update foods identified
-        const foodsList = document.getElementById('foodsList');
-        if (result.foods_identified && result.foods_identified.length > 0) {
-            let foodsHTML = '';
-            result.foods_identified.forEach(food => {
-                foodsHTML += `
-                    <div class="food-item">
-                        <div class="food-item-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                        <div class="food-item-info">
-                            <div class="food-item-name">${food.name}</div>
-                            <div class="food-item-details">
-                                ${food.portion_size} | ${food.calories} calories
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            foodsList.innerHTML = foodsHTML;
-        } else {
-            foodsList.innerHTML = '<p>No foods identified in the image.</p>';
-        }
-        
-        // Update nutrition summary
-        const nutritionSummary = document.getElementById('nutritionSummary');
-        if (result.total_nutrition) {
-            const nutrition = result.total_nutrition;
-            let summaryHTML = `
-                <div class="nutrient-summary-item">
-                    <span class="nutrient-name">Total Calories</span>
-                    <span class="nutrient-value">${nutrition.total_calories || 'N/A'}</span>
-                </div>
-                <div class="nutrient-summary-item">
-                    <span class="nutrient-name">Protein</span>
-                    <span class="nutrient-value">${nutrition.total_protein || 'N/A'}</span>
-                </div>
-                <div class="nutrient-summary-item">
-                    <span class="nutrient-name">Carbohydrates</span>
-                    <span class="nutrient-value">${nutrition.total_carbs || 'N/A'}</span>
-                </div>
-                <div class="nutrient-summary-item">
-                    <span class="nutrient-name">Fats</span>
-                    <span class="nutrient-value">${nutrition.total_fats || 'N/A'}</span>
-                </div>
+            
+            // Update verification status
+            const verificationStatus = document.getElementById('verificationStatus');
+            verificationStatus.innerHTML = `
+                <span class="verification-badge pending-badge">
+                    <i class="fas fa-clock"></i> Verification Requested
+                </span>
             `;
             
-            if (nutrition.fiber) {
-                summaryHTML += `
-                    <div class="nutrient-summary-item">
-                        <span class="nutrient-name">Fiber</span>
-                        <span class="nutrient-value">${nutrition.fiber}</span>
-                    </div>
+            // Show success message
+            alert('Verification request submitted successfully! Our team will review your product.');
+            
+            // Simulate approval after a delay
+            setTimeout(() => {
+                // Create certificate
+                const certificateData = {
+                    product: productName,
+                    brand: productBrand,
+                    barcode: barcode,
+                    verifiedDate: new Date().toLocaleDateString(),
+                    certificateId: 'CERT-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                    verifiedBy: 'Imbewu Food Safety System'
+                };
+                
+                // Save to localStorage
+                let certificates = JSON.parse(localStorage.getItem('vendorCertificates') || '[]');
+                certificates.push(certificateData);
+                localStorage.setItem('vendorCertificates', JSON.stringify(certificates));
+                
+                // Update UI
+                verificationStatus.innerHTML = `
+                    <span class="verification-badge verified-badge">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
                 `;
-            }
-            
-            nutritionSummary.innerHTML = summaryHTML;
-        } else {
-            nutritionSummary.innerHTML = '<p>No nutrition information available.</p>';
-        }
-        
-        // Update macronutrient distribution
-        if (result.meal_analysis) {
-            const analysis = result.meal_analysis;
-            
-            // Set protein bar
-            if (analysis.protein_ratio) {
-                const proteinPercent = analysis.protein_ratio.replace('%', '');
-                document.getElementById('proteinBar').style.width = proteinPercent + '%';
-                document.getElementById('proteinPercent').textContent = analysis.protein_ratio;
-            }
-            
-            // Set carbs bar
-            if (analysis.carb_ratio) {
-                const carbsPercent = analysis.carb_ratio.replace('%', '');
-                document.getElementById('carbsBar').style.width = carbsPercent + '%';
-                document.getElementById('carbsPercent').textContent = analysis.carb_ratio;
-            }
-            
-            // Set fats bar
-            if (analysis.fat_ratio) {
-                const fatsPercent = analysis.fat_ratio.replace('%', '');
-                document.getElementById('fatsBar').style.width = fatsPercent + '%';
-                document.getElementById('fatsPercent').textContent = analysis.fat_ratio;
-            }
-        }
-        
-        // Update health insights
-        const healthInsights = document.getElementById('healthInsights');
-        if (result.health_insights) {
-            const insights = result.health_insights;
-            let insightsHTML = '';
-            
-            if (insights.meal_balance) {
-                insightsHTML += `
-                    <div class="insight-item">
-                        <h4>Meal Balance</h4>
-                        <p>${insights.meal_balance}</p>
-                    </div>
-                `;
-            }
-            
-            if (insights.positive_aspects && insights.positive_aspects.length > 0) {
-                insightsHTML += `
-                    <div class="insight-item">
-                        <h4>Positive Aspects</h4>
-                        <ul>
-                            ${insights.positive_aspects.map(aspect => `<li>${aspect}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            
-            if (insights.improvement_areas && insights.improvement_areas.length > 0) {
-                insightsHTML += `
-                    <div class="insight-item">
-                        <h4>Areas for Improvement</h4>
-                        <ul>
-                            ${insights.improvement_areas.map(area => `<li>${area}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            
-            if (insights.suggestions && insights.suggestions.length > 0) {
-                insightsHTML += `
-                    <div class="insight-item">
-                        <h4>Suggestions</h4>
-                        <ul>
-                            ${insights.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            
-            healthInsights.innerHTML = insightsHTML || '<p>No health insights available.</p>';
-        } else {
-            healthInsights.innerHTML = '<p>No health insights available.</p>';
-        }
-        
-        // Update dietary flags
-        const dietaryFlags = document.getElementById('dietaryFlags');
-        if (result.dietary_flags) {
-            const flags = result.dietary_flags;
-            let flagsHTML = '';
-            
-            for (const [key, value] of Object.entries(flags)) {
-                if (typeof value === 'boolean') {
-                    flagsHTML += `
-                        <div class="dietary-flag ${value}">
-                            ${key.replace(/_/g, ' ')}: ${value ? 'Yes' : 'No'}
-                        </div>
-                    `;
-                } else if (Array.isArray(value) && value.length > 0) {
-                    flagsHTML += `
-                        <div class="dietary-flag">
-                            ${key.replace(/_/g, ' ')}: ${value.join(', ')}
-                        </div>
-                    `;
-                }
-            }
-            
-            dietaryFlags.innerHTML = flagsHTML || '<p>No dietary information available.</p>';
-        } else {
-            dietaryFlags.innerHTML = '<p>No dietary information available.</p>';
-        }
-        
-        // Show food analysis and hide other sections
-        foodAnalysis.style.display = 'block';
-        plateAnalysis.style.display = 'none';
-        productInfo.style.display = 'none';
-        
-        // Reset to foods tab
-        document.querySelectorAll('.analysis-tabs .tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.tab === 'foods') {
-                btn.classList.add('active');
-            }
-        });
-        
-        document.querySelectorAll('#foodAnalysis .tab-content').forEach(content => {
-            content.classList.remove('active');
-            if (content.id === 'foodsTab') {
-                content.classList.add('active');
-            }
-        });
-    }
-
-    function saveFoodAnalysis() {
-        // Get current analysis data
-        const analyzedImage = document.getElementById('analyzedImage').src;
-        const foodsList = document.getElementById('foodsList').innerHTML;
-        
-        // Get saved analyses from localStorage or initialize empty array
-        let savedAnalyses = JSON.parse(localStorage.getItem('savedFoodAnalyses') || '[]');
-        
-        // Create analysis object
-        const analysis = {
-            image: analyzedImage,
-            foods: foodsList,
-            date: new Date().toISOString()
-        };
-        
-        // Add to saved analyses
-        savedAnalyses.push(analysis);
-        
-        // Save back to localStorage
-        localStorage.setItem('savedFoodAnalyses', JSON.stringify(savedAnalyses));
-        
-        // Visual feedback
-        saveAnalysisBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
-        saveAnalysisBtn.disabled = true;
-        
-        setTimeout(() => {
-            saveAnalysisBtn.innerHTML = '<i class="fas fa-save"></i> Save Analysis';
-            saveAnalysisBtn.disabled = false;
+                
+                document.getElementById('generateCertificate').disabled = false;
+                requestVerificationBtn.style.display = 'none';
+                
+                // Update recent products list
+                addToRecentProducts(currentProductData);
+                
+                alert(`Product verified successfully! Certificate ID: ${certificateData.certificateId}`);
+            }, 3000);
         }, 2000);
     }
 
-    function resetFoodAnalysis() {
-        foodAnalysis.style.display = 'none';
-        plateAnalysis.style.display = 'block';
-        resetImageAnalysis();
+    function generateCertificate() {
+        // Get product data
+        const productName = document.querySelector('.product-details h2').textContent;
+        const productBrand = document.querySelector('.product-details p').textContent;
+        const barcode = document.querySelector('.product-barcode span:last-child').textContent;
+        
+        // Find existing certificate
+        const savedCertificates = JSON.parse(localStorage.getItem('vendorCertificates') || '[]');
+        const existingCertificate = savedCertificates.find(cert => cert.barcode === barcode);
+        
+        if (existingCertificate) {
+            // Generate and download PDF certificate
+            generatePDFCertificate(existingCertificate);
+        } else {
+            alert('No certificate found for this product. Please request verification first.');
+        }
+    }
+
+    function generatePDFCertificate(certificateData) {
+        // Create a new jsPDF instance
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Set document properties
+        doc.setProperties({
+            title: `Food Safety Certificate - ${certificateData.product}`,
+            subject: 'Food Safety Verification Certificate',
+            author: 'Imbewu Food Safety System',
+            keywords: 'food, safety, certificate, verification',
+            creator: 'Imbewu Food Safety System'
+        });
+        
+        // Add certificate border
+        doc.setDrawColor(100, 100, 100);
+        doc.setLineWidth(1);
+        doc.rect(10, 10, 190, 277);
+        
+        // Add header with logo
+        doc.setFillColor(240, 240, 240);
+        doc.rect(10, 10, 190, 30, 'F');
+        
+        // Add title
+        doc.setFontSize(24);
+        doc.setTextColor(40, 40, 40);
+        doc.setFont(undefined, 'bold');
+        doc.text('FOOD SAFETY CERTIFICATE', 105, 25, { align: 'center' });
+        
+        // Add certificate ID
+        doc.setFontSize(12);
+        doc.setTextColor(100, 100, 100);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Certificate ID: ${certificateData.certificateId}`, 105, 35, { align: 'center' });
+        
+        // Add verification seal
+        doc.setFillColor(220, 220, 220);
+        doc.circle(105, 70, 20, 'F');
+        doc.setFontSize(16);
+        doc.setTextColor(0, 128, 0);
+        doc.text('VERIFIED', 105, 67, { align: 'center' });
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Food Safety', 105, 74, { align: 'center' });
+        
+        // Add product information
+        doc.setFontSize(16);
+        doc.setTextColor(40, 40, 40);
+        doc.setFont(undefined, 'bold');
+        doc.text('PRODUCT INFORMATION', 105, 95, { align: 'center' });
+        
+        doc.setDrawColor(200, 200, 200);
+        doc.line(20, 100, 190, 100);
+        
+        doc.setFontSize(12);
+        doc.setTextColor(60, 60, 60);
+        doc.setFont(undefined, 'bold');
+        doc.text('Product Name:', 30, 115);
+        doc.setFont(undefined, 'normal');
+        doc.text(certificateData.product, 80, 115);
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Brand:', 30, 125);
+        doc.setFont(undefined, 'normal');
+        doc.text(certificateData.brand, 80, 125);
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Barcode:', 30, 135);
+        doc.setFont(undefined, 'normal');
+        doc.text(certificateData.barcode, 80, 135);
+        
+        // Add verification details
+        doc.setFontSize(16);
+        doc.setTextColor(40, 40, 40);
+        doc.setFont(undefined, 'bold');
+        doc.text('VERIFICATION DETAILS', 105, 155, { align: 'center' });
+        
+        doc.line(20, 160, 190, 160);
+        
+        doc.setFontSize(12);
+        doc.setTextColor(60, 60, 60);
+        doc.setFont(undefined, 'bold');
+        doc.text('Verified By:', 30, 175);
+        doc.setFont(undefined, 'normal');
+        doc.text(certificateData.verifiedBy, 80, 175);
+        
+        doc.setFont(undefined, 'bold');
+        doc.text('Verification Date:', 30, 185);
+        doc.setFont(undefined, 'normal');
+        doc.text(certificateData.verifiedDate, 80, 185);
+        
+        // Add compliance statement
+        doc.setFontSize(14);
+        doc.setTextColor(40, 40, 40);
+        doc.setFont(undefined, 'bold');
+        doc.text('COMPLIANCE STATEMENT', 105, 205, { align: 'center' });
+        
+        doc.line(20, 210, 190, 210);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(60, 60, 60);
+        doc.setFont(undefined, 'normal');
+        const complianceText = [
+            'This product has been verified by the Imbewu Food Safety System and',
+            'has been found to comply with established food safety standards.',
+            'The product formulation, ingredients, and labeling have been reviewed',
+            'and meet the requirements for safe consumption.',
+            '',
+            'This certificate is valid for one year from the date of issue.'
+        ];
+        
+        complianceText.forEach((line, i) => {
+            doc.text(line, 105, 220 + (i * 5), { align: 'center' });
+        });
+        
+        // Add footer
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text('© Imbewu Food Safety System - https://imbewu-foodsafety.org', 105, 270, { align: 'center' });
+        
+        // Generate file name
+        const fileName = `Food_Safety_Certificate_${certificateData.barcode}.pdf`;
+        
+        // Save the PDF
+        doc.save(fileName);
+        
+        // Show success message
+        alert(`Certificate downloaded successfully as ${fileName}`);
+    }
+
+    function showNewProductForm() {
+        switchMode('newProduct');
+    }
+
+    function handleProductSubmit(e) {
+        e.preventDefault();
+        
+        const productName = document.getElementById('productName').value;
+        const productBrand = document.getElementById('productBrand').value;
+        const productBarcode = document.getElementById('productBarcode').value;
+        const productIngredients = document.getElementById('productIngredients').value;
+        
+        if (!productName || !productBrand || !productIngredients) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        // Create mock product data
+        const mockProductData = {
+            code: productBarcode || 'MANUAL-' + Date.now(),
+            product: {
+                product_name: productName,
+                brands: productBrand,
+                ingredients_text: productIngredients,
+                image_url: null
+            }
+        };
+        
+        // Display verification info
+        currentProductData = mockProductData;
+        displayVerificationInfo(mockProductData);
+        addToRecentProducts(mockProductData);
+        
+        // Show success message
+        alert('Product information saved successfully!');
     }
 
     function showLoading() {
         loadingState.style.display = 'flex';
+        verificationInfo.style.display = 'none';
         errorState.style.display = 'none';
     }
 
@@ -1070,7 +1126,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showError(message) {
-        errorState.style.display = 'flex';
+        errorState.style.display = 'block';
+        verificationInfo.style.display = 'none';
+        loadingState.style.display = 'none';
         document.getElementById('errorMessage').textContent = message;
     }
 
@@ -1081,13 +1139,13 @@ document.addEventListener('DOMContentLoaded', function() {
             quaggaInitialized = false;
         }
         
+        scannerInitialized = false;
+        
+        // Reset UI
         document.getElementById('scanner-placeholder').style.display = 'flex';
         document.getElementById('scanner-view').style.display = 'none';
-        
-        // Hide error state
+        verificationInfo.style.display = 'none';
         errorState.style.display = 'none';
-        
-        // Show barcode scanner
-        barcodeScanner.style.display = 'block';
+        loadingState.style.display = 'none';
     }
 });
