@@ -353,7 +353,6 @@ function createEngagementCard(engagement) {
                 <div class="card-actions-menu">
                     <button class="menu-btn"><i class="fas fa-ellipsis-v"></i></button>
                     <div class="dropdown-menu">
-                        <button class="dropdown-item edit-btn">Edit</button>
                         <button class="dropdown-item delete-btn">Delete</button>
                     </div>
                 </div>
@@ -402,7 +401,7 @@ function createEngagementCard(engagement) {
         <div class="card-actions">
             <button class="action-btn like-btn ${engagement.user_has_liked ? 'active' : ''}">
                 <i class="fas fa-heart"></i>
-                ${engagement.user_has_liked ? 'Liked' : 'Like'}
+                ${engagement.user_has_liked ? 'Like' : 'Like'}
             </button>
             <button class="action-btn comment-btn">
                 <i class="fas fa-comment"></i>

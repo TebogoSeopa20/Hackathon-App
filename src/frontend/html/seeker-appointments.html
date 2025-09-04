@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imbewu | Book Appointments</title>
-    <meta name="description" content="Book appointments with cultural knowledge contributors on Imbewu">
+    <title>Imbewu | Appointments</title>
+    <meta name="description" content="Book appointments with cultural knowledge contributors">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="../images/icon.png" type="image/png">
+    <link rel="stylesheet" href="../css/contributor-dashboard.css">
     <link rel="stylesheet" href="../css/seeker-appointments.css">
 </head>
 <body>
@@ -17,7 +18,7 @@
             <span class="logo-text">Imbewu</span>
         </a>
         <div class="nav-search">
-            <input type="text" placeholder="Search contributors..." class="search-input" id="contributor-search">
+            <input type="text" placeholder="Search contributors..." class="search-input">
             <button class="search-btn"><i class="fas fa-search"></i></button>
         </div>
         <div class="nav-user">
@@ -27,7 +28,7 @@
             </div>
             <div class="user-profile">
                 <img src="../images/avatar-placeholder2.png" alt="User Profile" class="user-avatar">
-                <span class="user-name">Seeker</span>
+                <span class="user-name">Community Member</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
         </div>
@@ -45,15 +46,15 @@
                     <i class="fas fa-home"></i>
                     <span>Overview</span>
                 </a>
-                <a href="plant-identification.html" class="nav-item">
+                <a href="#plant-identification" class="nav-item">
                     <i class="fas fa-camera"></i>
                     <span>Plant ID</span>
                 </a>
-                <a href="knowledge-library.html" class="nav-item">
+                <a href="#knowledge-library" class="nav-item">
                     <i class="fas fa-book"></i>
                     <span>Knowledge Library</span>
                 </a>
-                <a href="seeker-engagement.html" class="nav-item">
+                <a href="seeker-engagements.html" class="nav-item">
                     <i class="fas fa-comments"></i>
                     <span>Community Engagement</span>
                 </a>
@@ -61,7 +62,7 @@
                     <i class="fas fa-handshake"></i>
                     <span>Appointments</span>
                 </a>
-                <a href="cultural-calendar.html" class="nav-item">
+                <a href="#cultural-calendar" class="nav-item">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Cultural Calendar</span>
                 </a>
@@ -83,23 +84,38 @@
             <div class="appointments-container">
                 <!-- Header Section -->
                 <div class="appointments-header">
-                    <h1>Book Appointments</h1>
-                    <p>Connect with cultural knowledge contributors for one-on-one consultations</p>
+                    <h1>Appointments</h1>
+                    <p>Book appointments with cultural knowledge contributors to learn and share wisdom</p>
                     
-                    <!-- Tabs -->
+                    <!-- Tabs for navigation -->
                     <div class="tabs">
-                        <button class="tab-btn active" data-tab="contributors">Find Contributors</button>
+                        <button class="tab-btn active" data-tab="book">Book Appointment</button>
                         <button class="tab-btn" data-tab="my-appointments">My Appointments</button>
                     </div>
                 </div>
 
-                <!-- Contributors Tab Content -->
-                <div class="tab-content active" id="contributors-tab">
-                    <!-- Filters -->
-                    <div class="filters-section">
+                <!-- Book Appointment Section -->
+                <div id="book-appointment-tab" class="tab-content active">
+                    <!-- Search and Filters -->
+                    <div class="search-filters">
+                        <div class="search-box">
+                            <input type="text" id="contributor-search" placeholder="Search contributors by name, expertise...">
+                            <button class="search-btn"><i class="fas fa-search"></i></button>
+                        </div>
                         <div class="filter-group">
-                            <label for="cultural-affiliation">Cultural Affiliation:</label>
-                            <select id="cultural-affiliation">
+                            <label for="expertise-filter">Expertise:</label>
+                            <select id="expertise-filter">
+                                <option value="all">All Expertise</option>
+                                <option value="medicine">Traditional Medicine</option>
+                                <option value="ceremony">Ceremonies</option>
+                                <option value="language">Language</option>
+                                <option value="history">History</option>
+                                <option value="crafts">Traditional Crafts</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="cultural-filter">Cultural Group:</label>
+                            <select id="cultural-filter">
                                 <option value="all">All Groups</option>
                                 <option value="Zulu">Zulu</option>
                                 <option value="Xhosa">Xhosa</option>
@@ -108,18 +124,6 @@
                                 <option value="Sotho">Sotho</option>
                             </select>
                         </div>
-                        <div class="filter-group">
-                            <label for="expertise">Expertise Area:</label>
-                            <select id="expertise">
-                                <option value="all">All Expertise</option>
-                                <option value="medicinal-plants">Medicinal Plants</option>
-                                <option value="traditional-ceremonies">Traditional Ceremonies</option>
-                                <option value="cultural-history">Cultural History</option>
-                                <option value="spiritual-practices">Spiritual Practices</option>
-                                <option value="traditional-crafts">Traditional Crafts</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-outline" id="apply-filters">Apply Filters</button>
                     </div>
 
                     <!-- Contributors List -->
@@ -131,29 +135,28 @@
                     </div>
                 </div>
 
-                <!-- My Appointments Tab Content -->
-                <div class="tab-content" id="my-appointments-tab">
+                <!-- My Appointments Section -->
+                <div id="my-appointments-tab" class="tab-content">
                     <!-- Appointments Filters -->
-                    <div class="filters-section">
+                    <div class="appointments-filters">
                         <div class="filter-group">
-                            <label for="appointment-status">Status:</label>
-                            <select id="appointment-status">
+                            <label for="status-filter">Status:</label>
+                            <select id="status-filter">
                                 <option value="all">All Statuses</option>
                                 <option value="scheduled">Scheduled</option>
                                 <option value="confirmed">Confirmed</option>
-                                <option value="completed">Completed</option>
                                 <option value="cancelled">Cancelled</option>
+                                <option value="completed">Completed</option>
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label for="appointment-date">Date Range:</label>
-                            <select id="appointment-date">
+                            <label for="date-filter">Date Range:</label>
+                            <select id="date-filter">
                                 <option value="upcoming">Upcoming</option>
                                 <option value="past">Past</option>
                                 <option value="all">All Dates</option>
                             </select>
                         </div>
-                        <button class="btn btn-outline" id="apply-appointment-filters">Apply Filters</button>
                     </div>
 
                     <!-- Appointments List -->
@@ -181,43 +184,55 @@
                 </div>
                 <form id="appointment-form">
                     <input type="hidden" id="contributor-id">
+                    
                     <div class="form-group">
-                        <label for="appointment-title">Appointment Title *</label>
-                        <input type="text" id="appointment-title" placeholder="e.g., Consultation about medicinal plants" required>
+                        <label for="appointment-title">Title *</label>
+                        <input type="text" id="appointment-title" placeholder="e.g., Learning about traditional healing plants" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="appointment-date">Date *</label>
-                        <input type="date" id="appointment-date" required min="">
+                        <label for="appointment-description">Description</label>
+                        <textarea id="appointment-description" placeholder="Briefly describe what you'd like to discuss..."></textarea>
                     </div>
-                    <div class="form-group time-group">
-                        <div>
-                            <label for="start-time">Start Time *</label>
-                            <input type="time" id="start-time" required>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="appointment-date">Date *</label>
+                            <input type="date" id="appointment-date" required>
                         </div>
-                        <div>
-                            <label for="end-time">End Time *</label>
-                            <input type="time" id="end-time" required>
+                        
+                        <div class="form-group">
+                            <label for="appointment-time">Time *</label>
+                            <input type="time" id="appointment-time" required>
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="appointment-type">Appointment Type *</label>
-                        <select id="appointment-type" required>
-                            <option value="video">Video Call</option>
-                            <option value="audio">Audio Call</option>
+                        <label for="appointment-duration">Duration *</label>
+                        <select id="appointment-duration" required>
+                            <option value="30">30 minutes</option>
+                            <option value="60" selected>1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appointment-type">Appointment Type</label>
+                        <select id="appointment-type">
+                            <option value="virtual">Virtual Meeting</option>
                             <option value="in-person">In Person</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="appointment-notes">Notes (Optional)</label>
-                        <textarea id="appointment-notes" placeholder="Share any details about what you'd like to discuss..."></textarea>
+                    
+                    <div class="form-group" id="location-field" style="display: none;">
+                        <label for="appointment-location">Location</label>
+                        <input type="text" id="appointment-location" placeholder="Enter meeting location">
                     </div>
-                    <div class="availability-check" id="availability-check">
-                        <button type="button" class="btn btn-outline" id="check-availability-btn">Check Availability</button>
-                        <div class="availability-result" id="availability-result"></div>
-                    </div>
+                    
                     <div class="form-actions">
                         <button type="button" class="btn btn-outline" id="cancel-appointment-btn">Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="submit-appointment-btn">Book Appointment</button>
+                        <button type="submit" class="btn btn-primary">Book Appointment</button>
                     </div>
                 </form>
             </div>
@@ -233,6 +248,71 @@
             </div>
             <div class="modal-body" id="appointment-detail-content">
                 <!-- Appointment details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Appointment Modal -->
+    <div id="edit-appointment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Appointment</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-appointment-form">
+                    <input type="hidden" id="edit-appointment-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-appointment-title">Title *</label>
+                        <input type="text" id="edit-appointment-title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-appointment-description">Description</label>
+                        <textarea id="edit-appointment-description"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-appointment-date">Date *</label>
+                            <input type="date" id="edit-appointment-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-appointment-time">Time *</label>
+                            <input type="time" id="edit-appointment-time" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-appointment-duration">Duration *</label>
+                        <select id="edit-appointment-duration" required>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-appointment-type">Appointment Type</label>
+                        <select id="edit-appointment-type">
+                            <option value="virtual">Virtual Meeting</option>
+                            <option value="in-person">In Person</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="edit-location-field" style="display: none;">
+                        <label for="edit-appointment-location">Location</label>
+                        <input type="text" id="edit-appointment-location">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancel-edit-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
