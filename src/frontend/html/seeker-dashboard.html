@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imbewu | Knowledge Seeker Dashboard</title>
+    <meta name="description" content="Access ancestral wisdom, ethnobotanical knowledge, and cultural preservation tools.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../images/icon.png" type="image/png">
+    <link rel="stylesheet" href="../css/landing.css">
+    <link rel="stylesheet" href="../css/contributor-dashboard.css">
+    <link rel="stylesheet" href="../css/contributor-dash.css">
+    <link rel="stylesheet" href="../css/seeker-dashboard.css">
+    
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="seeker-dashboard.html" class="logo">
+            <i class="fas fa-seedling logo-icon"></i>
+            <span class="logo-text">Imbewu</span>
+        </a>
+        <div class="nav-search">
+            <input type="text" placeholder="Search plants, traditions, or knowledge..." class="search-input">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="nav-user">
+            <div class="notification-bell">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count">3</span>
+            </div>
+            <div class="user-profile">
+                <img src="../images/avatar-placeholder2.png" alt="User Profile" class="user-avatar">
+                <span class="user-name">Knowledge Seeker</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+        <button id="mobile-menu-button" class="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="seeker-dashboard.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="foodId.html" class="nav-item">
+                    <i class="fas fa-utensils"></i>
+                    <span>Food Scanner</span>
+                </a>
+                <a href="seeker-engagements.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>Community Engagement</span>
+                </a>
+                <a href="seeker-appointments.html" class="nav-item">
+                    <i class="fas fa-handshake"></i>
+                    <span>Apponitments</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="cultural-badge">
+                    <i class="fas fa-medal"></i>
+                    <span>Cultural Learner</span>
+                </div>
+                <button class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Welcome Section -->
+            <section id="overview" class="dashboard-section active">
+                <div class="welcome-banner">
+                    <h1>Welcome back, Seeker!</h1>
+                    <p>Today is a good day to learn about <span class="cultural-highlight">traditional healing plants</span> in your culture.</p>
+                    <div class="welcome-actions">
+                        <a href="foodId.html" class="btn btn-primary"><i class="fas fa-camera"></i>Identify Food</a>
+                        <a href="seeker-engagements.html" class="btn btn-primary"><i class="fas fa-comments"></i>Engage with Community</a>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Plants Learned</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Traditions Understood</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>Cultural Badges</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>18h</h3>
+                            <p>Learning Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-bookmark"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>You saved <strong>Umhlonyane (Artemisia afra)</strong> to your collection</p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>You identified <strong>Impila (Callilepis laureola)</strong></p>
+                                <span class="activity-time">Yesterday</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>You added <strong>First Fruits Celebration</strong> to your calendar</p>
+                                <span class="activity-time">2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Learning -->
+                <div class="learning-section">
+                    <h2>Continue Your Learning</h2>
+                    <div class="learning-cards">
+                        <div class="learning-card">
+                            <div class="learning-image" style="background-color: #8D6E63;">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div class="learning-content">
+                                <h3>Medicinal Plants of Southern Africa</h3>
+                                <p>Explore 15 common healing plants and their traditional uses</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%"></div>
+                                </div>
+                                <span class="progress-text">65% complete</span>
+                            </div>
+                        </div>
+                        <div class="learning-card">
+                            <div class="learning-image" style="background-color: #689F38;">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div class="learning-content">
+                                <h3>Seasonal Traditions & Practices</h3>
+                                <p>Understand how seasons influence cultural practices</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 30%"></div>
+                                </div>
+                                <span class="progress-text">30% complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cultural Insights -->
+                <div class="cultural-insights">
+                    <h2>Cultural Insights of the Day</h2>
+                    <div class="insights-grid">
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <i class="fas fa-seedling"></i>
+                                <h3>Plant of Wisdom</h3>
+                            </div>
+                            <p>The <strong>African Wormwood</strong> (Umhlonyane) is traditionally used for respiratory health and spiritual cleansing in many Southern African cultures.</p>
+                            <button class="btn-insight">Learn More</button>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-header">
+                                <i class="fas fa-history"></i>
+                                <h3>Cultural Practice</h3>
+                            </div>
+                            <p>In many traditions, knowledge is shared through storytelling during evening gatherings around the fire, preserving wisdom across generations.</p>
+                            <button class="btn-insight">Explore Tradition</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections would be here (initially hidden) -->
+            <section id="plant-identification" class="dashboard-section">
+                <!-- Plant identification content -->
+                <div class="section-header">
+                    <h2>Plant Identification</h2>
+                    <p>Use your camera to identify plants and learn about their traditional uses</p>
+                </div>
+                <div class="plant-id-container">
+                    <div class="camera-view">
+                        <div class="camera-placeholder">
+                            <i class="fas fa-camera"></i>
+                            <p>Camera access required for plant identification</p>
+                            <button class="btn btn-primary">Start Camera</button>
+                        </div>
+                    </div>
+                    <div class="recent-plants">
+                        <h3>Recently Identified Plants</h3>
+                        <div class="plants-list">
+                            <div class="plant-item">
+                                <div class="plant-image" style="background-color: #8D6E63;"></div>
+                                <div class="plant-info">
+                                    <h4>African Potato</h4>
+                                    <p>Hypoxis hemerocallidea</p>
+                                </div>
+                            </div>
+                            <div class="plant-item">
+                                <div class="plant-image" style="background-color: #689F38;"></div>
+                                <div class="plant-info">
+                                    <h4>Devil's Claw</h4>
+                                    <p>Harpagophytum procumbens</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="knowledge-library" class="dashboard-section">
+                <!-- Knowledge library content -->
+                <div class="section-header">
+                    <h2>Knowledge Library</h2>
+                    <p>Explore our growing collection of cultural knowledge and traditional practices</p>
+                </div>
+                <div class="library-filters">
+                    <div class="filter-group">
+                        <label>Filter by:</label>
+                        <select>
+                            <option>All Categories</option>
+                            <option>Medicinal Plants</option>
+                            <option>Cultural Traditions</option>
+                            <option>Historical Practices</option>
+                            <option>Language Preservation</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Cultural Affiliation:</label>
+                        <select>
+                            <option>All Cultures</option>
+                            <option>Zulu</option>
+                            <option>Xhosa</option>
+                            <option>Sotho</option>
+                            <option>Tswana</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="knowledge-grid">
+                    <!-- Knowledge items would be loaded here -->
+                    <div class="knowledge-item">
+                        <div class="knowledge-image" style="background-color: #8D6E63;">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="knowledge-content">
+                            <h3>Traditional Plant Uses</h3>
+                            <p>Comprehensive guide to medicinal plants and their applications in traditional practices</p>
+                            <div class="knowledge-meta">
+                                <span class="cultural-tag">Zulu</span>
+                                <span class="difficulty">Intermediate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="knowledge-item">
+                        <div class="knowledge-image" style="background-color: #689F38;">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="knowledge-content">
+                            <h3>Seasonal Celebrations</h3>
+                            <p>Understanding the significance of seasonal changes in cultural practices</p>
+                            <div class="knowledge-meta">
+                                <span class="cultural-tag">Xhosa</span>
+                                <span class="difficulty">Beginner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- More sections... -->
+        </main>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/seeker-dashboard.js"></script>
+</body>
+</html>

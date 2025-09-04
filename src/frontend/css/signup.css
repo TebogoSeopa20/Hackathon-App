@@ -1,11 +1,40 @@
 /* signup.css - Styles for Digital Sangoma++ Signup Page */
+/* signup.css - Updated Styles for Imbewu Signup Page */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Color scheme to match landing.css */
+    --primary: 222.2 47.4% 11.2%;
+    --nature-primary: 142 76% 36%;
+    --study-blue: #1e40af;
+    --study-blue-light: #3b82f6;
+    --study-blue-lighter: #dbeafe;
+    --study-gold: #f59e0b;
+    --study-gold-light: #fbbf24;
+    --study-dark: #1e293b;
+    --study-dark-light: #334155;
+    --study-muted: #64748b;
+    --study-border: #e2e8f0;
+    --study-bg: #f8fafc;
+    --study-success: #10b981;
+    --study-warning: #f59e0b;
+    --study-error: #ef4444;
+    --study-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --white: #ffffff;
+    --text-primary: var(--study-dark);
+    --text-secondary: var(--study-muted);
+    --gradient-primary: linear-gradient(135deg, var(--study-blue), var(--study-blue-light));
+    --gradient-gold: linear-gradient(135deg, var(--study-gold), var(--study-gold-light));
+}
+
 
 .signup-container {
     display: grid;
     grid-template-columns: 1fr;
-    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
+    background: linear-gradient(135deg, var(--study-bg) 0%, var(--study-blue-lighter) 100%);
     min-height: 100vh;
     padding-top: 80px;
+    font-family: 'Poppins', sans-serif;
 }
 
 @media (min-width: 992px) {
@@ -22,24 +51,28 @@
   max-width: 600px;
   margin: 0 auto;
   width: 100%;
+
 }
 
 .signup-form-container h1, .login-form-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: var(--research-dark);
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--study-dark);
+    font-weight: 600;
 }
 
 .signup-intro, .login-intro {
-  font-size: 1.1rem;
-  color: var(--muted-foreground);
-  margin-bottom: 2rem;
+    font-size: 1.1rem;
+    color: var(--study-muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
 }
 
 .signup-form, .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 .footer-links a {
   color: var(--muted-foreground);
@@ -159,12 +192,14 @@
   display: block;
   animation: fadeIn 0.3s ease-out forwards;
 }
-
 .step-title {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--research-dark);
-  font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--study-dark);
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--study-blue);
 }
 
 .form-group {
@@ -180,12 +215,6 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-.step-title {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--research-dark);
-  font-weight: 600;
-}
 
 .form-group label {
   display: block;
@@ -711,12 +740,6 @@ textarea.styled-input {
           display: block;
       }
       
-      .step-title {
-          color: var(--research-dark);
-          margin-bottom: 20px;
-          padding-bottom: 10px;
-          border-bottom: 2px solid var(--research-accent);
-      }
       
       .form-navigation {
           display: flex;

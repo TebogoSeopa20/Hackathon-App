@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imbewu | Sign Up</title>
-    <meta name="description" content="Join Imbewu - AI-powered Cultural-Ethnobotany and Ancestral Knowledge System">
+    <meta name="description" content="Join Imbewu - AI-powered Food Safety Scanner for Child Health">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../images/icon.png" type="image/png">
     <link rel="stylesheet" href="../css/landing.css">
     <link rel="stylesheet" href="../css/form-status.css">
     <link rel="stylesheet" href="../css/signup.css">
+    <link rel="stylesheet" href="../css/signup2.css">
     <link rel="stylesheet" href="../css/terms-modal.css">
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
         <a href="landing.html" class="logo">
-            <i class="fas fa-seedling logo-icon"></i>
+            <i class="fas fa-shield-alt logo-icon"></i>
             <span class="logo-text">Imbewu</span>
         </a>
         <ul class="nav-links">
@@ -38,7 +40,7 @@
     <nav id="mobile-nav" class="mobile-nav">
         <div class="mobile-nav-header">
             <a href="landing.html" class="logo">
-                <i class="fas fa-seedling logo-icon"></i>
+                <i class="fas fa-shield-alt logo-icon"></i>
                 <span class="logo-text">Imbewu</span>
             </a>
             <button id="mobile-nav-close" class="mobile-nav-close">
@@ -58,8 +60,8 @@
 
     <main class="signup-container">
         <section class="signup-form-container">
-            <h1>Complete the signup before logging with Google</h1>
-            <p class="signup-intro">Create your account to access ancestral wisdom, ethnobotanical knowledge, and cultural preservation tools.</p>
+            <h1>Join Our Food Safety Community</h1>
+            <p class="signup-intro">Create your account to access food safety scanning, product alerts, and community protection tools.</p>
             
             <form id="signupForm" class="signup-form" novalidate>
                 <!-- Step 1: Role Selection -->
@@ -67,27 +69,27 @@
                     <legend class="step-title">Select Your Role</legend>
                     <div class="role-selection">
                         <div class="role-option">
-                            <input type="radio" id="seeker" name="role" value="seeker" checked>
-                            <label for="seeker">
-                                <i class="fas fa-user-graduate"></i>
-                                <span>Knowledge Seeker</span>
-                                <small>Learn about traditions and healing practices</small>
+                            <input type="radio" id="parent" name="role" value="parent" checked>
+                            <label for="parent">
+                                <i class="fas fa-user"></i>
+                                <span>Parent/Caregiver</span>
+                                <small>Protect your family from dangerous food products</small>
                             </label>
                         </div>
                         <div class="role-option">
-                            <input type="radio" id="contributor" name="role" value="contributor">
-                            <label for="contributor">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                <span>Knowledge Contributor</span>
-                                <small>Share cultural wisdom and knowledge</small>
+                            <input type="radio" id="vendor" name="role" value="vendor">
+                            <label for="vendor">
+                                <i class="fas fa-store"></i>
+                                <span>Vendor/Shop Owner</span>
+                                <small>Verify your products and build customer trust</small>
                             </label>
                         </div>
                         <div class="role-option">
-                            <input type="radio" id="moderator" name="role" value="moderator">
-                            <label for="moderator">
-                                <i class="fas fa-shield-alt"></i>
-                                <span>Community Moderator</span>
-                                <small>Help maintain cultural accuracy and respect</small>
+                            <input type="radio" id="community" name="role" value="community">
+                            <label for="community">
+                                <i class="fas fa-users"></i>
+                                <span>Community Advocate</span>
+                                <small>Help monitor food safety in your neighborhood</small>
                             </label>
                         </div>
                     </div>
@@ -110,29 +112,25 @@
                         <span class="error-message" id="email_error"></span>
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Optional contact number" class="styled-input">
+                        <label for="phone">Phone Number*</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Your contact number" class="styled-input" required>
                         <span class="error-message" id="phone_error"></span>
                     </div>
                     <div class="form-group">
-                        <label for="cultural_affiliation">Cultural Affiliation*</label>
-                        <select id="cultural_affiliation" name="cultural_affiliation" class="styled-input" required>
-                            <option value="">Select your cultural background</option>
-                            <option value="zulu">Zulu</option>
-                            <option value="xhosa">Xhosa</option>
-                            <option value="pedi">Pedi</option>
-                            <option value="tswana">Tswana</option>
-                            <option value="sotho">Sotho</option>
-                            <option value="tsonga">Tsonga</option>
-                            <option value="swazi">Swazi</option>
-                            <option value="venda">Venda</option>
-                            <option value="ndebele">Ndebele</option>
-                            <option value="other">Other African Tradition</option>
-                            <option value="global">Global Indigenous</option>
-                            <option value="multiple">Multiple Heritage</option>
-                            <option value="ally">Cultural Ally/Researcher</option>
+                        <label for="community_location">Community/Location*</label>
+                        <select id="community_location" name="community_location" class="styled-input" required>
+                            <option value="">Select your community area</option>
+                            <option value="soweto">Soweto, Johannesburg</option>
+                            <option value="alexandra">Alexandra, Johannesburg</option>
+                            <option value="khayelitsha">Khayelitsha, Cape Town</option>
+                            <option value="gugulethu">Gugulethu, Cape Town</option>
+                            <option value="mdantsane">Mdantsane, East London</option>
+                            <option value="tshwane">Tshwane Townships</option>
+                            <option value="durban">Durban Townships</option>
+                            <option value="rural">Rural Community</option>
+                            <option value="other">Other South African Community</option>
                         </select>
-                        <span class="error-message" id="cultural_affiliation_error"></span>
+                        <span class="error-message" id="community_location_error"></span>
                     </div>
                     <div class="form-navigation">
                         <button type="button" class="btn btn-outline prev-btn">Back</button>
@@ -179,9 +177,9 @@
                     </div>
                 </fieldset>
 
-                <!-- Step 4: Terms and Cultural Ethics -->
+                <!-- Step 4: Terms and Community Guidelines -->
                 <fieldset class="form-step" id="step4">
-                    <legend class="step-title">Terms & Cultural Ethics</legend>
+                    <legend class="step-title">Terms & Community Guidelines</legend>
                     <div class="form-group">
                         <div class="checkbox-group">
                             <input type="checkbox" id="termsAgree" name="termsAgree" class="styled-checkbox" required>
@@ -191,15 +189,15 @@
                     </div>
                     <div class="form-group">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="ethicsAgree" name="ethicsAgree" class="styled-checkbox" required>
-                            <label for="ethicsAgree">I agree to respect cultural protocols and use knowledge shared on this platform ethically and responsibly</label>
+                            <input type="checkbox" id="guidelinesAgree" name="guidelinesAgree" class="styled-checkbox" required>
+                            <label for="guidelinesAgree">I agree to report only accurate information and use this platform responsibly to protect my community</label>
                         </div>
-                        <span class="error-message" id="ethicsAgree_error"></span>
+                        <span class="error-message" id="guidelinesAgree_error"></span>
                     </div>
                     <div class="form-group">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="newsletterAgree" name="newsletterAgree" class="styled-checkbox">
-                            <label for="newsletterAgree">I'd like to receive updates about new features and cultural events</label>
+                            <input type="checkbox" id="alertsAgree" name="alertsAgree" class="styled-checkbox">
+                            <label for="alertsAgree">I want to receive immediate safety alerts about dangerous products in my area</label>
                         </div>
                     </div>
                     
@@ -217,13 +215,13 @@
         </section>
         <section class="signup-image">
             <div class="signup-overlay">
-                <h2>Join Our <span class="gradient-text">Intergenerational Wisdom</span> Community</h2>
+                <h2>Join Our <span class="gradient-text">Food Safety</span> Community</h2>
                 <ul class="benefit-list">
-                    <li><i class="fas fa-seedling"></i> Access AI-powered plant identification and ethnobotanical knowledge</li>
-                    <li><i class="fas fa-brain"></i> Explore ancestral wisdom through our knowledge graph</li>
-                    <li><i class="fas fa-calendar-alt"></i> Sync with traditional lunar and seasonal calendars</li>
-                    <li><i class="fas fa-handshake"></i> Connect with elders and knowledge keepers</li>
-                    <li><i class="fas fa-shield-alt"></i> Contribute to preserving endangered cultural knowledge</li>
+                    <li><i class="fas fa-camera"></i> Scan products to identify harmful ingredients and counterfeits</li>
+                    <li><i class="fas fa-bell"></i> Receive immediate safety alerts about dangerous products</li>
+                    <li><i class="fas fa-store"></i> Check vendor safety ratings before purchasing</li>
+                    <li><i class="fas fa-users"></i> Connect with other parents and community advocates</li>
+                    <li><i class="fas fa-shield-alt"></i> Protect children from dangerous snacks in your community</li>
                 </ul>
             </div>
         </section>
@@ -246,15 +244,15 @@
 
                 <section class="terms-section">
                     <h3>2. Description of Service</h3>
-                    <p>Imbewu is an AI-powered cultural-ethnobotany and ancestral knowledge system that provides:</p>
+                    <p>Imbewu is an AI-powered food safety scanner that provides:</p>
                     <ul>
-                        <li>Plant identification through computer vision technology</li>
-                        <li>Cultural and medicinal information about plants</li>
-                        <li>Access to traditional knowledge and practices</li>
-                        <li>Community features for knowledge sharing</li>
-                        <li>Digital ritual calendar and cultural event information</li>
+                        <li>Product scanning and ingredient identification</li>
+                        <li>Safety alerts for dangerous or recalled products</li>
+                        <li>Vendor safety ratings and community reports</li>
+                        <li>Food safety education and resources</li>
+                        <li>Community reporting features</li>
                     </ul>
-                    <p><strong>Important:</strong> Imbewu is designed for cultural education and preservation purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+                    <p><strong>Important:</strong> While Imbewu provides food safety information, users should always exercise caution and common sense when consuming food products.</p>
                 </section>
 
                 <section class="terms-section">
@@ -264,21 +262,20 @@
                 </section>
 
                 <section class="terms-section">
-                    <h3>4. Cultural Respect and Ethical Use</h3>
+                    <h3>4. Community Reporting Guidelines</h3>
                     <p>As a user of Imbewu, you agree to:</p>
                     <ul>
-                        <li>Respect all cultural knowledge, traditions, and practices shared on the platform</li>
-                        <li>Not appropriate, commercialize, or misuse cultural information without proper authorization</li>
-                        <li>Acknowledge the source of knowledge when sharing information obtained from the platform</li>
-                        <li>Use the platform in a manner that honors the cultural contexts from which knowledge originates</li>
-                        <li>Not use the platform for any form of cultural exploitation or appropriation</li>
+                        <li>Report only accurate and verified information about products</li>
+                        <li>Not misuse the reporting system for personal disputes</li>
+                        <li>Provide clear evidence when reporting dangerous products</li>
+                        <li>Respect privacy and avoid sharing personal information about vendors without consent</li>
+                        <li>Use the platform to improve community safety, not for harassment</li>
                     </ul>
                 </section>
 
                 <section class="terms-section">
                     <h3>5. Intellectual Property Rights</h3>
                     <p>The Service and its original content, features, and functionality are and will remain the exclusive property of Imbewu and its licensors. The Service is protected by copyright, trademark, and other laws of both the South Africa and foreign countries.</p>
-                    <p>Traditional knowledge shared on the platform remains the intellectual property of the originating cultures and communities. Imbewu acts as a custodian and preservation platform, not an owner of this knowledge.</p>
                 </section>
 
                 <section class="terms-section">
@@ -292,18 +289,22 @@
                     <p>You may use the Service only for lawful purposes and in accordance with these Terms. You agree not to use the Service:</p>
                     <ul>
                         <li>In any way that violates any applicable national or international law or regulation</li>
-                        <li>To exploit, harm, or attempt to exploit or harm minors in any way</li>
-                        <li>To transmit, or procure the sending of, any advertising or promotional material</li>
+                        <li>To make false reports about products or vendors</li>
+                        <li>To harass, intimidate, or threaten vendors or other community members</li>
                         <li>To impersonate or attempt to impersonate the company, a company employee, another user, or any other person or entity</li>
                         <li>In any way that infringes upon the rights of others, or in any way is illegal, threatening, fraudulent, or harmful</li>
-                        <li>To engage in any other conduct that restricts or inhibits anyone's use or enjoyment of the Service</li>
                     </ul>
                 </section>
 
                 <section class="terms-section">
-                    <h3>8. Medical Disclaimer</h3>
-                    <p><strong>Important:</strong> The information provided by Imbewu is for cultural and educational purposes only and is not intended as medical advice. The traditional uses of plants described in the Service have not been evaluated by medical authorities and should not be used to diagnose, treat, cure, or prevent any disease without consulting a healthcare professional.</p>
-                    <p>Never disregard professional medical advice or delay in seeking it because of something you have read on the Imbewu platform. If you think you may have a medical emergency, call your doctor or emergency services immediately.</p>
+                    <h3>8. Safety Disclaimer</h3>
+                    <p><strong>Important:</strong> While Imbewu strives to provide accurate food safety information, we cannot guarantee complete accuracy of all product information, especially for unregulated or informal market products. Users should always:</p>
+                    <ul>
+                        <li>Exercise caution when consuming unfamiliar products</li>
+                        <li>Check expiration dates personally when possible</li>
+                        <li>Seek medical attention immediately if food poisoning is suspected</li>
+                        <li>Report adverse reactions to local health authorities</li>
+                    </ul>
                 </section>
 
                 <section class="terms-section">
@@ -342,9 +343,9 @@
                     <h3>13. Contact Information</h3>
                     <p>If you have any questions about these Terms, please contact us at:</p>
                     <address>
-                        Imbewu Cultural Preservation Foundation<br>
+                        Imbewu Food Safety Initiative<br>
                         Email: <a href="mailto:legal@imbewu.org">tebogoseopa10@gmail.com</a><br>
-                        Postal Address: PO Box 123, Cultural District, Johannesburg, 2193, South Africa
+                        Postal Address: PO Box 123, Community Safety District, Johannesburg, 2193, South Africa
                     </address>
                 </section>
 
@@ -365,27 +366,27 @@
             <div class="footer-content">
                 <article class="footer-column">
                     <header class="footer-logo">
-                        <i class="fas fa-seedling"></i>
+                        <i class="fas fa-shield-alt"></i>
                         Imbewu
                     </header>
-                    <p>Bridging heritage, health, and modern science through AI-powered cultural preservation and ethnobotanical wisdom.</p>
+                    <p>Protecting children from dangerous snacks with AI-powered food safety scanning and community reporting.</p>
                 </article>
                 <article class="footer-column">
                     <h3>Platform</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Plant Identification</a></li>
-                        <li><a href="#">Knowledge Graph</a></li>
-                        <li><a href="#">Ritual Calendar</a></li>
-                        <li><a href="#">Elder Connections</a></li>
+                        <li><a href="#">Product Scanning</a></li>
+                        <li><a href="#">Safety Alerts</a></li>
+                        <li><a href="#">Vendor Ratings</a></li>
+                        <li><a href="#">Community Reporting</a></li>
                     </ul>
                 </article>
                 <article class="footer-column">
                     <h3>Resources</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Cultural Database</a></li>
-                        <li><a href="#">Learning Materials</a></li>
-                        <li><a href="#">Research Papers</a></li>
+                        <li><a href="#">Food Safety Tips</a></li>
+                        <li><a href="#">Dangerous Ingredients Guide</a></li>
                         <li><a href="#">Community Guidelines</a></li>
+                        <li><a href="#">Educational Materials</a></li>
                     </ul>
                 </article>
                 <article class="footer-column">
@@ -404,9 +405,6 @@
         </div>
     </footer>
 
-    <script>
-
-    </script>
     <script src="../js/signup.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/terms-modal.js"></script>
