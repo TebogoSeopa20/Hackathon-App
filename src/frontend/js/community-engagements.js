@@ -1,5 +1,9 @@
 // community-engagements.js
-const API_BASE_URL = 'http://localhost:3000/api';
+// community-engagements.js
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const API_BASE_URL = isProduction 
+  ? 'https://imbewu-dehthyfyfhb9dmhn.southafricanorth-01.azurewebsites.net/api' 
+  : 'http://localhost:3000/api';
 
 // Global variables
 let currentPage = 1;
