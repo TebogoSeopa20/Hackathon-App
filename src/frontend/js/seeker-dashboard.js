@@ -2,18 +2,18 @@
 
 // Cultural greeting mappings
 const culturalGreetings = {
-    'zulu': { singular: 'Sawubona', plural: 'Sanibonani' },
-    'xhosa': { singular: 'Molo', plural: 'Sanibonani' },
-    'pedi': { singular: 'Thobela', plural: 'Thobela' },
-    'tswana': { singular: 'Dumela', plural: 'Dumelang' },
-    'sotho': { singular: 'Lumela', plural: 'Lumelang' },
-    'tsonga': { singular: 'Avuxeni', plural: 'Avuxeni' },
-    'swazi': { singular: 'Sawubona', plural: 'Sanibonani' },
-    'venda': { singular: 'Ndaa', plural: 'Ndaa' },
-    'ndebele': { singular: 'Lotjhani', plural: 'Lotjhanini' },
-    'other': { singular: 'Hello', plural: 'Hello' },
+    'zulu': { singular: 'Welcome', plural: 'Sanibonani' },
+    'xhosa': { singular: 'Welcome', plural: 'Sanibonani' },
+    'pedi': { singular: 'Welcome', plural: 'Thobela' },
+    'tswana': { singular: 'Welcome', plural: 'Dumelang' },
+    'sotho': { singular: 'Welcome', plural: 'Lumelang' },
+    'tsonga': { singular: 'Welcome', plural: 'Avuxeni' },
+    'swazi': { singular: 'Welcome', plural: 'Sanibonani' },
+    'venda': { singular: 'Welcome', plural: 'Ndaa' },
+    'ndebele': { singular: 'Welcome', plural: 'Lotjhanini' },
+    'other': { singular: 'Welcome', plural: 'Hello' },
     'global': { singular: 'Welcome', plural: 'Welcome' },
-    'multiple': { singular: 'Greetings', plural: 'Greetings' },
+    'multiple': { singular: 'Welcome', plural: 'Greetings' },
     'ally': { singular: 'Welcome', plural: 'Welcome' }
 };
 
@@ -298,9 +298,9 @@ function loadUserData() {
         // Format the cultural context for display
         const formattedCulture = culturalContext.charAt(0).toUpperCase() + culturalContext.slice(1);
         if (formattedCulture === 'Other') {
-            welcomeMessage.innerHTML = `Today is a good day to learn about <span class="cultural-highlight">traditional healing plants</span> in your culture.`;
+            welcomeMessage.innerHTML = `Protect your family with <span class="cultural-highlight">real-time food safety information</span> and community alerts.`;
         } else {
-            welcomeMessage.innerHTML = `Today is a good day to learn about <span class="cultural-highlight">traditional healing plants</span> in ${formattedCulture} culture.`;
+            welcomeMessage.innerHTML = `Protect your family with <span class="cultural-highlight">real-time food safety information</span> and community alerts.`;
         }
     }
     
@@ -358,3 +358,255 @@ function initSearch() {
         searchButton.addEventListener('click', performSearch);
     }
 }
+
+// Initialize dashboard with data
+function initDashboard() {
+    // Update user info
+    updateUserInfo();
+    
+    // Load dashboard stats
+    loadDashboardStats();
+    
+    // Load recent scans
+    loadRecentScans();
+    
+    // Load safety alerts
+    loadSafetyAlerts();
+}
+
+// Update user information in the dashboard
+function updateUserInfo() {
+    const user = auth.getCurrentUser();
+    const userNameElement = document.querySelector('.user-name');
+    const userAvatarContainer = document.querySelector('.user-avatar');
+    
+    if (userNameElement && user.full_name) {
+        userNameElement.textContent = user.full_name;
+    }
+    
+    if (userAvatarContainer) {
+        // Clear existing content
+        userAvatarContainer.innerHTML = '';
+        
+        // Create avatar with initials
+        userAvatarContainer.innerHTML = `
+            <div class="avatar-initials">
+                ${getInitials(user.full_name)}
+            </div>
+        `;
+    }
+}
+
+// Get initials from name
+function getInitials(name) {
+    if (!name) return 'PS';
+    
+    const names = name.trim().split(' ');
+    if (names.length === 1) {
+        return names[0].charAt(0).toUpperCase();
+    }
+    
+    return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+}
+
+// Load dashboard statistics
+function loadDashboardStats() {
+    // Get data from localStorage or set defaults
+    const recentFoods = JSON.parse(localStorage.getItem('recentFoods') || '[]');
+    const savedReports = JSON.parse(localStorage.getItem('savedReports') || '[]');
+    
+    // Update stats
+    document.getElementById('scannedCount').textContent = recentFoods.length;
+    document.getElementById('reportedCount').textContent = savedReports.length;
+    
+    // Simulate community posts count (would come from API in real app)
+    document.getElementById('communityCount').textContent = Math.floor(Math.random() * 50) + 10;
+    
+    // Simulate safe vendors count
+    document.getElementById('safeVendors').textContent = Math.floor(Math.random() * 20) + 5;
+    
+    // Update alert count
+    document.getElementById('alertCount').textContent = 2;
+}
+
+// Load recent scans from localStorage
+function loadRecentScans() {
+    const recentFoods = JSON.parse(localStorage.getItem('recentFoods') || '[]');
+    const scansGrid = document.getElementById('recentScans');
+    
+    if (recentFoods.length === 0) {
+        scansGrid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-barcode"></i>
+                <p>No recently scanned products</p>
+                <a href="foodId.html" class="btn btn-primary">Scan Your First Product</a>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    recentFoods.slice(0, 4).forEach(product => {
+        // Determine safety status (simulated)
+        const status = Math.random() > 0.7 ? 'warning' : (Math.random() > 0.9 ? 'danger' : 'safe');
+        const statusText = status === 'safe' ? 'Safe' : (status === 'warning' ? 'Caution' : 'Unsafe');
+        
+        html += `
+            <div class="scan-card">
+                <div class="scan-image">
+                    ${product.image ? 
+                        `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                        `<i class="fas fa-image"></i>`
+                    }
+                </div>
+                <div class="scan-content">
+                    <h3>${product.name || 'Unknown Product'}</h3>
+                    <p>${product.brand || 'Unknown Brand'}</p>
+                    <span class="scan-status status-${status}">${statusText}</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    scansGrid.innerHTML = html;
+}
+
+// Load safety alerts (simulated)
+function loadSafetyAlerts() {
+    // In a real app, this would come from an API
+    const alerts = [
+        {
+            type: 'critical',
+            title: 'Recall: Baby Food Brand X',
+            description: 'Potential contamination detected in batches sold between Oct-Nov 2023',
+            time: '2 hours ago'
+        },
+        {
+            type: 'warning',
+            title: 'Allergen Warning: Product Y',
+            description: 'Undeclared milk ingredients found in vegan-labeled products',
+            time: 'Yesterday'
+        }
+    ];
+    
+    const alertsList = document.getElementById('safetyAlerts');
+    let html = '';
+    
+    alerts.forEach(alert => {
+        html += `
+            <div class="alert-item ${alert.type}">
+                <div class="alert-icon">
+                    <i class="fas fa-${alert.type === 'critical' ? 'exclamation-circle' : 'exclamation-triangle'}"></i>
+                </div>
+                <div class="alert-content">
+                    <h3>${alert.title}</h3>
+                    <p>${alert.description}</p>
+                    <span class="alert-time">${alert.time}</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    alertsList.innerHTML = html;
+}
+
+// Simulate checking for new alerts
+function checkForNewAlerts() {
+    // In a real app, this would poll an API
+    const hasNewAlerts = Math.random() > 0.8;
+    
+    if (hasNewAlerts) {
+        // Show notification
+        showNotification('New safety alert available', 'warning');
+        
+        // Update alert count
+        const currentCount = parseInt(document.getElementById('alertCount').textContent);
+        document.getElementById('alertCount').textContent = currentCount + 1;
+    }
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+        <button class="notification-close"><i class="fas fa-times"></i></button>
+    `;
+    
+    // Add styles if not already added
+    if (!document.querySelector('#notification-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'notification-styles';
+        styles.textContent = `
+            .notification {
+                position: fixed;
+                top: 90px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: var(--radius);
+                background: hsl(var(--card));
+                color: hsl(var(--card-foreground));
+                box-shadow: var(--shadow-lg);
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 400px;
+            }
+            
+            .notification.show {
+                transform: translateX(0);
+            }
+            
+            .notification.success {
+                border-left: 4px solid hsl(var(--success));
+            }
+            
+            .notification.warning {
+                border-left: 4px solid hsl(var(--warning));
+            }
+            
+            .notification.error {
+                border-left: 4px solid hsl(var(--error));
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: inherit;
+                cursor: pointer;
+                margin-left: auto;
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Add close event
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+
+// Check for alerts periodically (every 5 minutes)
+setInterval(checkForNewAlerts, 5 * 60 * 1000);

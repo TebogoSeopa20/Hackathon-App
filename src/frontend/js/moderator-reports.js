@@ -40,6 +40,18 @@ const updateStatusBtn = document.getElementById('update-status-btn');
 const modalCloseBtn = document.getElementById('modal-close');
 const modalCloseBtn2 = document.getElementById('modal-close-btn');
 
+// Function to get initials from a name
+function getInitials(name) {
+    if (!name) return '?';
+    
+    const names = name.trim().split(' ');
+    if (names.length === 1) {
+        return names[0].charAt(0).toUpperCase();
+    }
+    
+    return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
@@ -48,6 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Update user info
+    updateUserInfo();
+    
     // Set up event listeners
     setupEventListeners();
     
@@ -56,6 +71,39 @@ document.addEventListener('DOMContentLoaded', function() {
     loadContributorReports();
     loadAnalytics();
 });
+
+// Update user info in navigation
+function updateUserInfo() {
+    const user = auth.getCurrentUser();
+    const userNameElement = document.querySelector('.user-name');
+    const userAvatarContainer = document.querySelector('.user-avatar');
+    
+    if (userNameElement && user && user.full_name) {
+        userNameElement.textContent = user.full_name;
+    }
+    
+    if (userAvatarContainer && user) {
+        // Clear existing content
+        userAvatarContainer.innerHTML = '';
+        
+        // Create avatar with initials fallback
+        if (user.avatar_url) {
+            userAvatarContainer.innerHTML = `
+                <img src="${user.avatar_url}" alt="${user.full_name}" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="avatar-initials" style="display: none;">
+                    ${getInitials(user.full_name)}
+                </div>
+            `;
+        } else {
+            userAvatarContainer.innerHTML = `
+                <div class="avatar-initials">
+                    ${getInitials(user.full_name)}
+                </div>
+            `;
+        }
+    }
+}
 
 // Set up event listeners
 function setupEventListeners() {
@@ -489,6 +537,7 @@ async function openReportModal(type, reportId) {
         const report = await response.json();
         currentReportId = reportId;
         currentReportData = report;
+        currentReportType = type;
         
         // Set modal title
         modalTitle.textContent = `${type === 'seeker' ? 'Seeker' : 'Contributor'} Report Details`;
@@ -757,9 +806,11 @@ async function updateReportStatus() {
             return;
         }
         
-        const endpoint = currentReportData.hasOwnProperty('shop_name') ? 'seeker-reports' : 'contributor-reports';
+        // Determine the correct API endpoint based on report type
+        const endpoint = currentReportType === 'seeker-reports' ? 'seeker-reports' : 'contributor-reports';
         
-        const response = await fetch(`${API_BASE_URL}/${endpoint}/${currentReportId}`, {
+        // Update the status in the database
+        const response = await fetch(`${API_BASE_URL}/${endpoint}/${currentReportId}/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -771,11 +822,17 @@ async function updateReportStatus() {
         });
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
+        
+        const updatedReport = await response.json();
         
         // Update the local data
         currentReportData.status = newStatus;
+        
+        // Show success notification
+        showNotification('Report status updated successfully', 'success');
         
         // Refresh the reports list
         if (currentReportType === 'seeker-reports') {
@@ -784,12 +841,14 @@ async function updateReportStatus() {
             loadContributorReports();
         }
         
-        showNotification('Report status updated successfully', 'success');
-        closeModal();
+        // Close the modal after a short delay
+        setTimeout(() => {
+            closeModal();
+        }, 1500);
         
     } catch (error) {
         console.error('Error updating report status:', error);
-        showNotification('Failed to update report status', 'error');
+        showNotification(`Failed to update report status: ${error.message}`, 'error');
     }
 }
 
@@ -910,6 +969,7 @@ function closeModal() {
     modal.classList.remove('active');
     currentReportId = null;
     currentReportData = null;
+    currentReportType = 'seeker-reports';
 }
 
 function formatStatus(status) {

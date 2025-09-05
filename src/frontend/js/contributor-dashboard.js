@@ -2,18 +2,18 @@
 
 // Cultural greeting mappings
 const culturalGreetings = {
-    'zulu': { singular: 'Sawubona', plural: 'Sanibonani' },
-    'xhosa': { singular: 'Molo', plural: 'Sanibonani' },
-    'pedi': { singular: 'Thobela', plural: 'Thobela' },
-    'tswana': { singular: 'Dumela', plural: 'Dumelang' },
-    'sotho': { singular: 'Lumela', plural: 'Lumelang' },
-    'tsonga': { singular: 'Avuxeni', plural: 'Avuxeni' },
-    'swazi': { singular: 'Sawubona', plural: 'Sanibonani' },
-    'venda': { singular: 'Ndaa', plural: 'Ndaa' },
-    'ndebele': { singular: 'Lotjhani', plural: 'Lotjhanini' },
-    'other': { singular: 'Hello', plural: 'Hello' },
+    'zulu': { singular: 'Welcome', plural: 'Sanibonani' },
+    'xhosa': { singular: 'Welcome', plural: 'Sanibonani' },
+    'pedi': { singular: 'Welcome', plural: 'Thobela' },
+    'tswana': { singular: 'Welcome', plural: 'Dumelang' },
+    'sotho': { singular: 'Welcome', plural: 'Lumelang' },
+    'tsonga': { singular: 'Welcome', plural: 'Avuxeni' },
+    'swazi': { singular: 'Welcome', plural: 'Sanibonani' },
+    'venda': { singular: 'Welcome', plural: 'Ndaa' },
+    'ndebele': { singular: 'Welcome', plural: 'Lotjhanini' },
+    'other': { singular: 'Welcome', plural: 'Hello' },
     'global': { singular: 'Welcome', plural: 'Welcome' },
-    'multiple': { singular: 'Greetings', plural: 'Greetings' },
+    'multiple': { singular: 'Welcome', plural: 'Greetings' },
     'ally': { singular: 'Welcome', plural: 'Welcome' }
 };
 
@@ -304,9 +304,9 @@ function loadUserData() {
         // Format the cultural context for display
         const formattedCulture = culturalContext.charAt(0).toUpperCase() + culturalContext.slice(1);
         if (formattedCulture === 'Other') {
-            welcomeMessage.innerHTML = `Your knowledge is helping preserve <span class="cultural-highlight">cultural heritage</span> for future generations.`;
+            welcomeMessage.innerHTML = `Verifying your products ensures <span class="cultural-highlight"safety</span> in our community`;
         } else {
-            welcomeMessage.innerHTML = `Your ${formattedCulture} knowledge is helping preserve <span class="cultural-highlight">cultural heritage</span> for future generations.`;
+            welcomeMessage.innerHTML = `Verifying your prodects ensures  <span class="cultural-highlight">safety</span> in our community.`;
         }
     }
     
